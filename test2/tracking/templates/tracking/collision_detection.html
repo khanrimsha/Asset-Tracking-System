@@ -12,6 +12,12 @@
       
         <title> Our Home</title>
         <style type="text/css">
+  .popupCustom .leaflet-popup-tip,
+.popupCustom .leaflet-popup-content-wrapper {
+    background: #e0e0e0;
+    color: #234c5e;
+    font-size: 20px;
+}
         #foo {
     width: 300px;
     height: 150px;}
@@ -76,10 +82,10 @@
                  
         
               
-                    <div >
+                    <div style="background-color: black;" >
                         {% leaflet_map "map"  %} 
                     </div>
-                    <div id="myDiv">
+                    <div id="myDiv" style="background-color: black;">
                         <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
                       </div>
                 
@@ -98,29 +104,37 @@
   var probab={{prob |safe}};
   var device={{device |safe}};
   var data={{data|safe}};
+  
   var map = L.map('map').setView(center, 14);
   var danger_data={{danger_data|safe}};
-  var points={{ data|safe}};
+  
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">I am Rimsha</a> contributors',
       maxZoom: 18}).addTo(map);  
             
-      var circle = L.circle(center, 20000, {color: 'blue',
+      var circle = L.circle(center, 18200, {color: 'blue',
                     fillColor: 'blue',
                     fillOpacity: 0.5,
                     }).addTo(map); 
-    var circle = L.circle(center, 10000, {color: 'purple',
+    var circle = L.circle(center, 12000, {color: 'purple',
                     fillColor: 'purple',
                     fillOpacity: 0.5,
                     }).addTo(map); 
   
-    var circle = L.circle(center, 3000, {color: 'red',
+    var circle = L.circle(center, 6000, {color: 'red',
                                                     fillColor: '#f03',
                                                     fillOpacity: 0.5,
                                                     }).addTo(map); 
 L.Icon.Default.imagePath = 'D:/django/test2/leaflet/';
 var marks=[]; //storing marker objects
 var lines=[];
+var customOptions =
+    {
+    'maxWidth': '400',
+    'width': '200',
+    
+    'className' : 'popupCustom'
+    }
 function create_marker(x,y,z,name,prob,class_){
 
 var marker= new L.marker([x,y], {
@@ -153,14 +167,27 @@ marker.bindPopup('<div id="foo"></div>').on('popupopen', function (e) {
 
 } else {
     if (z=='Danger'){
-marker.bindPopup("<b>Aircraft ID:</b> "+name+" <b>Status:\n</b> "+z+" <b>Chances:</b> "+prob*100+"%").addTo(map);
+marker.bindPopup( "<b>Aircraft ID:</b> "+name+" <br><b>Status:\n</b> "+z+" <br><b>Chances:</b> "+prob*100+"% "+"<br><b>Location: </b>Karachi Airport <br><b>Estimated Time:</b> 19:00" ,customOptions).addTo(map);
     }else {
-        marker.bindPopup("<b>Aircraft ID:</b> "+name+" <b>Status...:</b> "+z).addTo(map);
+        marker.bindPopup("<b>Aircraft ID:</b> "+name+" <br><b>Status: </b>Safe ",customOptions).addTo(map);
   
     }
 }
 marks.push(marker);}
-
+var table_data0=[];
+var table_data1=[];
+var table_data2=[];
+var table_data3=[];
+var table_data4=[];
+for (var i=0; i< data.length;i++){
+  if (data[i][2]=='Danger'){
+table_data0.push(data[i][0]);
+table_data1.push(data[i][1]);
+table_data2.push(data[i][2]);
+table_data3.push(data[i][3]);
+table_data4.push(data[i][4]);
+}}
+var table_data=[table_data0,table_data1,table_data2,table_data3,table_data4];
 for (var i=0;i<data.length;i++) //creating markers
 {
 if (data[i][2]=='Danger'){
@@ -194,7 +221,7 @@ lines.push(polyline);
 }
 function MapClick(e) {
     lt=e.latlng.lat;
-      // alert();
+      alert(table_data);
 }
 L.Icon.Default.prototype._getIconUrl()
 for (var i=0; i<marks.length;i++){
@@ -206,5 +233,35 @@ marks[i].on('mouseover', onMapHover);
 
 
 }
+
+var tab_data = [{
+  type: 'table',
+  columnwidth: [1000,1000,1000,1000,1000],
+  columnorder: [0,1,2,3,4],
+  header: {
+    values: ['<b>Latitude</b>','<b>Longitude</b>','<b>Status</b>','<b>Device</b>','<b>Probability</b>'],
+    align: "center",
+    line: {width: 1, color: 'rgb(50, 50, 50)'},
+    fill: {color: ['rgb(235, 100, 230)']},
+    font: {family: "Arial", size: 14, color: "white"}
+  },
+  cells: {
+    values: table_data,
+    align: ["center", "center"],
+    line: {color: "black", width: 1},
+    fill: {color: ['rgba(228, 222, 249, 0.65)', 'rgba(228, 222, 249, 0.65)','rgba(228, 222, 249, 0.65)','rgb(235, 193, 238)','rgba(228, 222, 249, 0.65)']},
+    font: {family: "Arial", size: 13, color: ["black"]}
+  }
+}]
+
+var layout = {
+  paper_bgcolor: "rgba(0,0,0,0)",
+ color:'white',
+  'title': {'text':"<b>Aircraft KI76H Collision Detection</b>",'font-color':'white'},
+  font: {size: 18,color:'white'}
+}
+
+Plotly.newPlot('myDiv', tab_data, layout);
+
 </script>
 </html>{% endblock%}

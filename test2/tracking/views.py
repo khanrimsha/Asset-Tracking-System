@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import folium
+import numpy
 import pandas as pd
 from django.http import HttpResponse
 def tracking(request):
@@ -64,12 +65,12 @@ def insights(request):
 def collision_detection(request):
     data=pd.read_csv('C:/Users/Rimsha khan/Desktop/most_taken_route.csv')
     leaflet_data=data.loc[:,['lat','long','status','device','Prob']].values.tolist()#fetching coordinates
+    table_data=numpy.transpose(leaflet_data)
     center=[48.0295, -122.992]
     danger=data[data['status']=='Danger']
     prob=danger['Prob'].values.tolist()
     device=danger['device'].values.tolist()
     danger_data=danger.loc[:,['lat','long']].values.tolist()
-    my='Rimsha'
     results='No Select'
    
     if request.method=="POST":
@@ -77,6 +78,6 @@ def collision_detection(request):
     
         
     drop=['KI7MH','dummy']
-    context = {'data':leaflet_data,'center':center,'danger':danger,'danger_data':danger_data,'prob':prob,'device':device,'my':my,'drop':drop,'val':results}
+    context = {'data':leaflet_data,'center':center,'table_data':table_data,'danger_data':danger_data,'prob':prob,'device':device,'drop':drop,'val':results}
     
     return render(request,'tracking/collision_detection.html',context)
