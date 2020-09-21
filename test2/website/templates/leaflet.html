@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    {% load leaflet_tags %}
+    {% load static%}
+    <head>
+        {% leaflet_js %}
+        {% leaflet_css 'C:/Users/Rimsha khan/Desktop/mycss.css' %}
+        <title> Our Home</title>
+        <style type="text/css">
+        #foo {
+    width: 300px;
+    height: 150px;}
+            #map {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+@keyframes fade { 
+  from { opacity: 0.5; } 
+}
+
+.blinking {
+  animation: fade 1s infinite alternate;
+}
+            </style> 
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+        <link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
+      
+        
+    </head>
+    <body>
+        <h3> Allah is Great</h3>
+        <br>
+        <div>
+        {% leaflet_map "map"  %}</div>
+    <div id="myDiv">
+      <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
+    </div>
+    </body>
+   
+ <script>
+  
+  var center={{center |safe}}; 
+  
+  var data={{data|safe}};
+  var map = L.map('map').setView(center, 14);
+  var danger_data={{danger_data|safe}};
+  var points={{ data|safe}};
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">I am Rimsha</a> contributors',
+      maxZoom: 18}).addTo(map);  
+            
+      var circle = L.circle(center, 10000, {color: 'purple',
+                    fillColor: 'blue',
+                    fillOpacity: 0.5,
+                    }).addTo(map); 
+    var circle = L.circle(center, 5000, {color: 'green',
+                    fillColor: 'yellow',
+                    fillOpacity: 0.5,
+                    }).addTo(map); 
+  
+    var circle = L.circle(center, 1000, {color: 'red',
+                                                    fillColor: '#f03',
+                                                    fillOpacity: 0.5,
+                                                    }).addTo(map); 
+L.Icon.Default.imagePath = 'D:/django/test2/leaflet/';
+var marks=[]; //storing marker objects
+var lines=[];
+function create_marker(x,y,z,name,class_){
+
+var marker= new L.marker([x,y], {
+icon: L.icon({
+iconUrl: "https://svgsilh.com/svg/307246.svg",
+iconSize: [100, 100],
+rotationAngle: 90,
+color: "rgb(0,0,100)",
+className: class_,
+})})
+if (x==center[0] && y==center[1])  {
+marker.bindPopup('<div id="foo"></div>').on('popupopen', function (e) {
+        Plotly.newPlot('foo', [{
+          values: [1,23,5],
+  labels:['r','k','h'],
+  type: 'pie'
+        }], {
+            autosize: false,
+            width: 300,
+            height: 150,
+            margin: {
+                l: 0,
+                r: 0,
+                b: 0,
+                t: 0,
+                pad: 0
+            }
+        });
+    }).addTo(map);
+
+} else {
+marker.bindPopup("<b>Aircraft ID:</b> "+name+" <b>Status:</b> "+z).addTo(map);
+
+}
+marks.push(marker);}
+
+for (var i=0;i<data.length;i++) //creating markers
+{
+if (data[i][2]=='Danger'){
+create_marker(data[i][0],data[i][1],data[i][2],data[i][3],'blinking');
+}else{
+  create_marker(data[i][0],data[i][1],data[i][2],data[i][3],null);
+} }
+var polyArray=[];
+function onMapHover(e) {
+lt=e.latlng.lat;//latitude 
+lng=e.latlng.lng;//longitude
+if (e.latlng.lat==center[0] && e.latlng.lng== center[1]) {
+// Creating center points line with danger points
+
+for (var i =0;i<danger_data.length;i++)
+{
+var co=[center,danger_data[i]];
+polyArray.push(co);
+}
+Line(polyArray,'red');
+}  else {
+var latlngs = [[lt, lng],center];//center point and hover point
+Line(latlngs,'blue');
+}
+}
+var polyline=[center,center];
+function Line(latlong,color){
+map.removeLayer(polyline);
+polyline = new L.polyline(latlong, {color: color}).addTo(map);
+lines.push(polyline);
+}
+function MapClick(e) {
+    lt=e.latlng.lat;
+      // alert();
+}
+L.Icon.Default.prototype._getIconUrl()
+for (var i=0; i<marks.length;i++){
+marks[i].on('click', MapClick);
+}
+
+for (var i=0; i<marks.length;i++){
+marks[i].on('mouseover', onMapHover);
+
+
+}
+</script>
+</html>

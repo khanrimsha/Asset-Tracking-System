@@ -1,0 +1,179 @@
+{% extends "base_site.html"%}
+
+
+{% block title %} Dashboard 1 {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+{% load plotly_dash%}
+  <div class="right_col" role="main" style="background-color:black;">
+    <!-- top tiles -->
+    <div class="row tile_count">
+     
+      
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> Total Vehicles</span>
+        <div class="count green">2,500</div>
+        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+      </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"></i> </span>
+        <div class="count green"></div>
+        <span class="count_bottom"><i class="green"></i> </i> </span>
+      </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"></i> </span>
+        <div class="count green"></div>
+        <span class="count_bottom"><i class="green"></i> </i> </span>
+      </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> Total Cars</span>
+        <div class="count">4,567</div>
+        <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>
+      </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> Total Trucks</span>
+        <div class="count">2,315</div>
+        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+      </div>
+      <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> Total Airplanes</span>
+        <div class="count">7,325</div>
+        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+      </div>
+    </div>
+    <!-- /top tiles -->
+<!-- map  -->
+    <div class="row" style="height:400px;background-color:black;border-style: solid;
+    border-color: rgb(224, 219, 219)">
+      <div class="col-md-12 col-sm-12 col-xs-12" style="height:50px;background-color:black;">
+        <div class="dashboard_graph" style="background-color:rgb(14, 6, 6);height:200px;">
+        <div class="row x_title">
+          <div class="col-md-12">
+            <h3>Map <small> Vehicle track</small></h3>
+          </div>
+          
+        </div>
+        <div >
+          {{ mymap|safe }} 
+        </div><div class="clearfix"></div>
+      </div></div></div> <br>
+    <!-- /map  -->
+    <!-- data table  -->
+      <div class="row" style="background-color:black;border-style: solid;
+      border-color: rgb(224, 219, 219)">
+      <div class="col-md-12 col-sm-12 col-xs-12" style="background-color:black;">
+        <div class="dashboard_graph" style="background-color:black;">
+
+          <div class="row x_title">
+            <div class="col-md-6">
+              <h3>Vehicle History <small> Vehicle name</small></h3>
+            </div>
+            <div class="col-md-6">
+              <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div >
+                <div class="{% plotly_class name='history'%} card" style="height:100%;width:100%">
+                    {% plotly_app name='history' ratio=1 %}
+                    {{ plot1 | safe }}
+                        </div>
+            </div>
+           
+        </div>
+        
+<!--
+          <div class="col-md-3 col-sm-3 col-xs-12 bg-white">
+            <div class="x_title">
+              <h2>Top Campaign Performance</h2>
+              <div class="clearfix"></div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-6">
+              <div>
+                <p>Facebook Campaign</p>
+                <div class="">
+                  <div class="progress progress_sm" style="width: 76%;">
+                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="99"></div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p>Twitter Campaign</p>
+                <div class="">
+                  <div class="progress progress_sm" style="width: 76%;">
+                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="60"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-6">
+              <div>
+                <p>Conventional Media</p>
+                <div class="">
+                  <div class="progress progress_sm" style="width: 76%;">
+                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="40"></div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p>Bill boards</p>
+                <div class="">
+                  <div class="progress progress_sm" style="width: 76%;">
+                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="50"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        -->
+          <div class="clearfix"></div>
+        </div>
+        
+      </div>
+    </div>
+
+    <br />
+    
+
+  
+  </div>
+  
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- Chart.js -->
+  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <!-- gauge.js -->
+  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
+  <!-- Skycons -->
+  <script src="/static/vendors/skycons/skycons.js"></script>
+  <!-- Flot -->
+  <script src="/static/vendors/Flot/jquery.flot.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
+  <!-- Flot plugins -->
+  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  <!-- DateJS -->
+  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- JQVMap -->
+  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
+  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+{% endblock javascripts %}
+
+    

@@ -1,0 +1,130 @@
+{%load static %}
+
+<!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie ie9" lang="en" class="no-js"> <![endif]-->
+<!--[if !(IE)]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+{% load leaflet_tags %}
+	
+<head>
+	<title>Home</title>
+	
+	{% leaflet_js %}
+	{% leaflet_css 'C:/Users/Rimsha khan/Desktop/mycss.css' %}
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="description" content="QueenAdmin - Beautiful Bootstrap Admin Dashboard Theme">
+	<meta name="author" content="The Develovers">
+	<!-- CSS -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
+  
+	<link href="{% static 'website/assets/css/bootstrap.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'website/assets/css/ionicons.css'%}" rel="stylesheet" type="text/css">
+	<link href="{% static 'website/assets/css/main.css'%}" rel="stylesheet" type="text/css">
+	<!-- Google Fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,300,400,700' rel='stylesheet' type='text/css'>
+	<!-- Fav and touch icons -->
+	<link rel="apple-touch-icon-precomposed" type="image/png" sizes="144x144" href="{% static 'website/assets/ico/queenadmin-favicon144x144.png'%}">
+	<link rel="apple-touch-icon-precomposed" type="image/png" sizes="114x114" href="{% static 'website/assets/ico/queenadmin-favicon114x114.png'%}">
+	<link rel="apple-touch-icon-precomposed" type="image/png" sizes="72x72" href="{% static 'website/assets/ico/queenadmin-favicon72x72.png'%}">
+	<link rel="apple-touch-icon-precomposed" type="image/png" sizes="57x57" href="{% static 'website/assets/ico/queenadmin-favicon57x57.png'%}">
+	<link rel="shortcut icon" href="{% static 'website/assets/ico/favicon.ico'%}">
+	<script src ="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
+</head>
+
+<body class="fixed-top-active maps-demo">
+	<!-- WRAPPER -->
+	<div class="wrapper">
+		<!-- TOP NAV BAR -->
+		{%include 'partials/_topnav.html' %}
+		<!-- END TOP NAV BAR -->
+		<!-- COLUMN LEFT -->
+        {%include 'partials/_sidebar.html' %}
+		<!-- END COLUMN LEFT -->
+		<!-- COLUMN RIGHT -->
+		<div id="col-right" class="col-right ">
+			<div class="container-fluid primary-content">
+				<!-- PRIMARY CONTENT HEADING -->
+				<div class="primary-content-heading clearfix">
+					<h2>HOME</h2>
+					<ul class="breadcrumb pull-left">
+						<li><i class="icon ion-home"></i><a href="#">Home</a></li>
+						<li class="active">Maps</li>
+					</ul>
+					<div class="sticky-content pull-right">
+						<div class="btn-group btn-dropdown">
+							<button type="button" class="btn btn-default btn-sm btn-favorites" data-toggle="dropdown"><i class="icon ion-android-star"></i> Vehicle</button>
+							<ul class="dropdown-menu dropdown-menu-right list-inline">
+								<li><a href="#"><i class="icon ion-android-car"></i> <span>Car</span></a></li>
+								<li><a href="#"><i class="icon ion-android-plane"></i> <span>Air Plane</span></a></li>
+								<li><a href="#"><i class="icon ion-android-bus"></ion-icon></i><span>Truck</span></a></li>
+								</ul>
+						</div>
+						<button type="button" class="btn btn-default btn-sm btn-quick-task" data-toggle="modal" data-target="#quick-task-modal"><i class="icon ion-edit"></i> Type</button>
+					</div>
+					<!-- quick task modal -->
+					<div class="modal fade" id="quick-task-modal" tabindex="-1" role="dialog" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title" id="myModalLabel">Quick Task</h4>
+								</div>
+								<div class="modal-body">
+									<form class="form-horizontal" role="form">
+										<div class="form-group">
+											<label for="task-title" class="control-label sr-only">Title</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" id="task-title" placeholder="Title">
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label sr-only">Description</label>
+											<div class="col-sm-12">
+												<textarea class="form-control" name="task-description" rows="5" cols="30" placeholder="Description"></textarea>
+											</div>
+										</div>
+										<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-primary">Save Task</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end quick task modal -->
+				</div>
+				<div class= 'row'>
+                    {% block content%}
+
+                    {%endblock%}
+                </div>
+					
+					
+	
+				
+				
+					
+	<!-- Javascript -->
+	<script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
+   
+	<script src="{% static 'website/assets/js/jquery/jquery-2.1.0.min.js'%}"></script>
+	<script src="{% static 'website/assets/js/bootstrap/bootstrap.js'%}"></script>
+	<script src="{% static 'website/assets/js/plugins/bootstrap-multiselect/bootstrap-multiselect.js'%}"></script>
+	<script src="{% static 'website/assets/js/plugins/jquery-slimscroll/jquery.slimscroll.min.js'%}"></script>
+	<script src="{% static 'website/assets/js/queen-common.js'%}"></script>
+	<script src="{% static 'website/assets/js/plugins/mapael/raphael/raphael-min.js'%}"></script>
+	<script src="{% static 'website/assets/js/plugins/mapael/jquery.mapael.js'%}"></script>
+	<script src="{% static 'website/assets/js/plugins/mapael/maps/world_countries.js'%}"></script>
+	<script src="{% static 'website/assets/js/plugins/mapael/maps/usa_states.js'%}"></script>
+	<script src="{% static 'website/assets/js/plugins/mapael/maps/france_departments.js'%}"></script>
+	<script src="{% static 'website/assets/js/plugins/jquery-mousewheel/jquery.mousewheel.js'%}"></script>
+	<script src="{% static 'website/assets/js/plugins/google-map/google-map.js'%}"></script>
+	<script src="{% static 'website/assets/js/queen-maps.js'%}"></script>
+</body>
+
+</html>
+
+    

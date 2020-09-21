@@ -1,0 +1,210 @@
+{% extends "base_site.html" %}
+{% load leaflet_tags %}
+{% leaflet_js %}
+{% leaflet_css 'C:/Users/Rimsha khan/Desktop/mycss.css' %}
+    {% load static%}
+    {% block content %}
+<!DOCTYPE html>
+<html>
+    
+    <head>
+       
+      
+        <title> Our Home</title>
+        <style type="text/css">
+        #foo {
+    width: 300px;
+    height: 150px;}
+            #map {
+                height: 700px;
+  bottom: 0;
+  left: 0;
+  
+  right: 0;
+  top: 0;
+}
+
+@keyframes fade { 
+  from { opacity: 0.5; } 
+}
+
+.blinking {
+  animation: fade 1s infinite alternate;
+}
+            </style> 
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+        <link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
+      
+        
+    </head>
+    <body>
+        
+       
+        <div class="right_col" role="main" style="background-color:rgb(0, 0, 0);">
+            <div class="row" style="background-color:black;">
+                <div class="col-md-12 col-sm-12 col-xs-12 " >
+            <form  action='{% url "collision_detection" %}' method="POST">
+              {%csrf_token %}
+              
+                  <label for="cars"><h3><i class="fa fa-car" style="font-size:24px;color:rgb(247, 192, 12);"> </i> Choose Aircraft:</label>
+                  
+                  <select style="color:black"  name="cars" id="cars" placeholder=" --Select--">
+                    <option value="" disabled selected hidden>--Select--</option>
+                  
+                    {% for d in drop%}
+                    {% if  d == val %}
+                    <option  disabled="true" selected > {{val}}</option>
+                    
+                    {% else %}
+            
+                    <option >{{d}}</option>
+                    {% endif %}
+                    
+                   {% endfor %}
+                   
+                  
+                   
+                  </select>
+                  <input type="submit" value="Track" >
+                </form></h3>
+                        </div>
+                </div>
+            <div class="row" style="background-color:black;border-style: solid;
+            border-color: rgb(224, 219, 219)" >
+              
+               
+                 
+        
+              
+                    <div >
+                        {% leaflet_map "map"  %} 
+                    </div>
+                    <div id="myDiv">
+                        <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
+                      </div>
+                
+               
+               <div class="clearfix"></div>
+                
+            
+            </div>
+          
+   </div>
+    </body>
+   
+ <script>
+  
+  var center={{center |safe}}; 
+  var probab={{prob |safe}};
+  var device={{device |safe}};
+  var data={{data|safe}};
+  var map = L.map('map').setView(center, 14);
+  var danger_data={{danger_data|safe}};
+  var points={{ data|safe}};
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">I am Rimsha</a> contributors',
+      maxZoom: 18}).addTo(map);  
+            
+      var circle = L.circle(center, 20000, {color: 'blue',
+                    fillColor: 'blue',
+                    fillOpacity: 0.5,
+                    }).addTo(map); 
+    var circle = L.circle(center, 10000, {color: 'purple',
+                    fillColor: 'purple',
+                    fillOpacity: 0.5,
+                    }).addTo(map); 
+  
+    var circle = L.circle(center, 3000, {color: 'red',
+                                                    fillColor: '#f03',
+                                                    fillOpacity: 0.5,
+                                                    }).addTo(map); 
+L.Icon.Default.imagePath = 'D:/django/test2/leaflet/';
+var marks=[]; //storing marker objects
+var lines=[];
+function create_marker(x,y,z,name,prob,class_){
+
+var marker= new L.marker([x,y], {
+icon: L.icon({
+iconUrl: "https://svgsilh.com/svg/307246.svg",
+iconSize: [100, 100],
+rotationAngle: 90,
+color: "rgb(0,0,100)",
+className: class_,
+})})
+if (x==center[0] && y==center[1])  {
+marker.bindPopup('<div id="foo"></div>').on('popupopen', function (e) {
+        Plotly.newPlot('foo', [{
+          values: probab,
+  labels: device,
+  type: 'pie'
+        }], {
+            autosize: false,
+            width: 300,
+            height: 150,
+            margin: {
+                l: 0,
+                r: 0,
+                b: 0,
+                t: 0,
+                pad: 0
+            }
+        });
+    }).addTo(map);
+
+} else {
+    if (z=='Danger'){
+marker.bindPopup("<b>Aircraft ID:</b> "+name+" <b>Status:\n</b> "+z+" <b>Chances:</b> "+prob*100+"%").addTo(map);
+    }else {
+        marker.bindPopup("<b>Aircraft ID:</b> "+name+" <b>Status...:</b> "+z).addTo(map);
+  
+    }
+}
+marks.push(marker);}
+
+for (var i=0;i<data.length;i++) //creating markers
+{
+if (data[i][2]=='Danger'){
+create_marker(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],'blinking');
+}else{
+  create_marker(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],null);
+} }
+var polyArray=[];
+function onMapHover(e) {
+lt=e.latlng.lat;//latitude 
+lng=e.latlng.lng;//longitude
+if (e.latlng.lat==center[0] && e.latlng.lng== center[1]) {
+// Creating center points line with danger points
+
+for (var i =0;i<danger_data.length;i++)
+{
+var co=[center,danger_data[i]];
+polyArray.push(co);
+}
+Line(polyArray,'red');
+}  else {
+var latlngs = [[lt, lng],center];//center point and hover point
+Line(latlngs,'#696969');
+}
+}
+var polyline=[center,center];
+function Line(latlong,color){
+map.removeLayer(polyline);
+polyline = new L.polyline(latlong, {color: color}).addTo(map);
+lines.push(polyline);
+}
+function MapClick(e) {
+    lt=e.latlng.lat;
+      // alert();
+}
+L.Icon.Default.prototype._getIconUrl()
+for (var i=0; i<marks.length;i++){
+marks[i].on('click', MapClick);
+}
+
+for (var i=0; i<marks.length;i++){
+marks[i].on('mouseover', onMapHover);
+
+
+}
+</script>
+</html>{% endblock%}
