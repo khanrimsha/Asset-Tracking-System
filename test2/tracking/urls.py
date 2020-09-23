@@ -8,4 +8,6 @@ path('tracking/',views.tracking,name='tracking'),
 path('tracking/insights/',views.insights,name='insights'),
 path('tracking/collision_detection/',views.collision_detection,name='collision_detection'),
 path('tracking/vehicle_history/',views.veh_hist,name='vehicle_history'), 
+path('',views.login,name="login"),
+path('logout/',views.logout,name="logout"),
 ]

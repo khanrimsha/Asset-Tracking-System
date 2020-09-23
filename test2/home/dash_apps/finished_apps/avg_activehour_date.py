@@ -1,12 +1,21 @@
 import dash_core_components as dcc
 import dash_html_components as html
+
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 from django_plotly_dash import DjangoDash
 import pandas as pd
-
+from tracking import views
+from importlib import import_module
+from django.conf import settings
+SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
+from django.contrib.sessions.backends.db import SessionStore
+s = SessionStore()
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
+try:
+    plane_var=s['cars']
+except:
+    plane_var=views.dev_name#use from function.py
 app = DjangoDash('AvgActiveHourDate', external_stylesheets=external_stylesheets)
 
 fuel_used=pd.read_csv('C:/Users/Rimsha khan/Desktop/insights/insights/Activehours_date.csv')
@@ -53,7 +62,7 @@ def gen_traces(selected_name):
         plot_bgcolor='rgb(0,0,0)',
         
        # xaxis={'autorange':True,'title':'Date','fixedrange':True},
-        xaxis = dict(title='Date',type='date'),
+        xaxis = dict(title=plane_var,type='date'),
         yaxis = dict(range=[0,fuel_used['Active_hours'].max()],title='Hours'),
         title="Average Active Hours",
         font=dict(color='white'),

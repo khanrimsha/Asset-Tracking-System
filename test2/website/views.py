@@ -1,23 +1,8 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth.models import User, auth
-from django.core.serializers import serialize
 from django.http import HttpResponse
-from django.views import View
-import pandas as pd
-import csv
-import json
-import os
 import folium
 import pandas as pd
 from django.views.generic import TemplateView
-username1="rimsha"
-password1="khan"
-# Create your views here.
-def index(request):
-    return render(request,'index.html',{})
-def logout(request):
-   
-    return render(request,'logout.html',{})
 
 
 def leaf(request):
@@ -33,24 +18,7 @@ def leaf(request):
     
     return render(request,'leaflet.html',context)
 
-def my_data(request):
-    with open('D:/django/test2/website/data/data.json',mode='r') as j:
-        my=json.load(j)
-    return HttpResponse(my,content_type='json')
-def maps(request):
-    return render(request,'maps.html',{})
-def login(request):
-    if request.method=="POST":
-           
-        username=request.POST['username']
-        password=request.POST['pass']
-        if username==username1 and password == password1:
-            
-            return render(request,'tracking/test.html',{})
-        else:
-            return render(request,'./home.html',{})
-    else:
-        return render(request,'./home.html',{})
+
 def folium_map(request):
     url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
     my_data=pd.read_csv('D:/django/test2/website/data/point.csv')
