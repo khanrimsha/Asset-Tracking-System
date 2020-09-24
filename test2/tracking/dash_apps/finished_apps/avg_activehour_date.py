@@ -8,15 +8,12 @@ import pandas as pd
 from tracking import views
 from importlib import import_module
 from django.conf import settings
-SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
-from django.contrib.sessions.backends.db import SessionStore
-s = SessionStore()
+
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-try:
-    plane_var=s['cars']
-except:
-    plane_var='I belong to home folder'#use from function.py
-app = DjangoDash('AvgActiveHourDate', external_stylesheets=external_stylesheets)
+plane_var='rim'
+
+app = DjangoDash('AvgActiveHourDate',add_bootstrap_links=True, external_stylesheets=external_stylesheets)
 
 fuel_used=pd.read_csv('C:/Users/Rimsha khan/Desktop/insights/insights/Activehours_date.csv')
 options=['All','January','February','March','April','May','June','July','August','September','October','November','December']
@@ -38,7 +35,7 @@ app.layout = html.Div([
    
 ])
 
-def gen_traces(selected_name):
+def gen_traces(selected_name,msg):
     if selected_name=='All':
         rimsha=fuel_used
     else:
@@ -64,19 +61,31 @@ def gen_traces(selected_name):
        # xaxis={'autorange':True,'title':'Date','fixedrange':True},
         xaxis = dict(title=plane_var,type='date'),
         yaxis = dict(range=[0,fuel_used['Active_hours'].max()],title='Hours'),
-        title="Average Active Hours",
+        title=msg,
         font=dict(color='white'),
            
         )
 
     return traces
 
-@app.callback(
+@app.expanded_callback(
             Output('slider-graph', 'figure'),
             [Input('Month', 'value')])
-def display_value(Month):
+def display_value(Month,**kwargs):
+    try:
+
+        msg = kwargs['session_state']
+        msg=str(msg)
+        global plane_var
+        plane_var=msg
+        
+    except:
+        msg="rimsha"
+
     
-    data=gen_traces(Month)
+    data=gen_traces(Month,msg)
+
     return {'data': data['graph'],'layout' :data['layout']}
+
    
     

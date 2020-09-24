@@ -15,10 +15,13 @@ def login(request):
         username=request.POST['username']
         password=request.POST['pass']
         if username==username1 and password==password1 :
-
+            session = request.session
             request.session['username'] = username
             request.session['pass'] = password
-            
+            request.session['dev_name']="No Select"
+            #demo_count = session.get('django_plotly_dash', {})
+            #demo_count= 'KHIZT'
+            session['django_plotly_dash'] = 'KHIZT' #random vehicle name
             return redirect('tracking/')
         else:
             return render(request,'tracking/home.html')
@@ -26,8 +29,10 @@ def login(request):
         return render(request,'tracking/home.html')
 def logout(request):
     try:
+        del request.session['django_plotly_dash']
         del request.session['username']
         del request.session['pass']
+        del request.session['dev_name']
     except:
         pass
     return render(request,'tracking/logout.html',{})
@@ -56,22 +61,15 @@ def veh_hist(requests):
 
     if requests.session.has_key('username') and requests.session.has_key('pass'):
         if requests.session['username']==username1 and requests.session['pass']==password1 :
-            geo_data=pd.read_csv('C:/Users/Rimsha khan/Desktop/Extra/test/Power BI/truck_structured_data.csv')
-
-            geo_data=geo_data.dropna(subset=['LATITUDE','LONGITUDE'])
-            my_data=geo_data[geo_data['DATE']=='2020-06-07']
-            listt=my_data.loc[:,['LATITUDE','LONGITUDE']].values.tolist()
-            last_co_ords=my_data.loc[:,['LATITUDE','LONGITUDE']].tail(1).values.tolist()
-            m2=folium.Map(height=200,location=listt[0],zoom_start=6,tiles='cartodbpositron',attr='by Rimsha Khan')
-
-            folium.vector_layers.PolyLine(listt,popup='<b>Path of Vehicle</b>',tooltip='Track of 2020-06-07',color='blue',weight=3).add_to(m2)
-
-            folium.Marker(location=listt[0],popup='Starting Point',tooltip='<strong>Starting Point</strong>',icon=folium.Icon(color='red',prefix='fa',icon='anchor')).add_to(m2)
-            folium.Marker(location=last_co_ords[0],popup='Finish Point',tooltip='<strong>Finish Point</strong>',icon=folium.Icon(color='purple',prefix='fa',icon='anchor')).add_to(m2)
-            m2=m2._repr_html_()
-            context = {'mymap': m2}
-
-
+            m2=functions.history_map()
+            functions.change_var('KI7MH-7')
+            drop=functions.vehicle_drop('car')
+            
+            results='No Select'
+        
+            if requests.method=="POST":
+                results=requests.POST['cars'] #name of select
+            context = {'mymap': m2,'drop':drop,'val':results}
             return render(requests,'tracking/vehicle_history.html',context)
         else:
             return redirect('/')
@@ -100,12 +98,13 @@ def insights(request):
         
             if request.method=="POST":
                 results=request.POST['cars'] #name of select
-                
-                request.session['cars']=results
-                global dev_name
-                dev_name=request.session['cars']
-                
-            drop=['car','truck'] 
+                request.session['dev_name']=results
+                request.session['django_plotly_dash']=results
+
+              
+            results=request.session['dev_name']
+            drop=functions.vehicle_drop('car') 
+            
             context = {'mymap': m2,'drop':drop,'val':results}
             return render(request,'tracking/insights.html',context)
         else:
@@ -117,23 +116,21 @@ def insights(request):
 def collision_detection(request):
     if request.session.has_key('username') and request.session.has_key('pass'):
         if request.session['username']==username1 and request.session['pass']==password1 :
-           
-            data=functions.col_det()
+            results='No Select'
+            plane_name=7865317
+            if request.method=="POST":
+                results=request.POST['cars'] #name of select
+                plane_name=request.POST['cars']
+            data=functions.col_det(plane_name)
             leaflet_data=data.loc[:,['lat','long','status','device','Prob']].values.tolist()#fetching coordinates
             table_data=numpy.transpose(leaflet_data)
             center=[48.0295, -122.992]
             danger=data[data['status']=='Danger']
             prob=danger['Prob'].values.tolist()
             device=danger['device'].values.tolist()
-            danger_data=danger.loc[:,['lat','long']].values.tolist()
-            results='No Select'
-        
-            if request.method=="POST":
-                results=request.POST['cars'] #name of select
-                plane_name=request.POST['cars']
-                
-            drop=['KI7MH','dummy']
-            context = {'data':leaflet_data,'center':center,'table_data':table_data,'danger_data':danger_data,'prob':prob,'device':device,'drop':drop,'val':results}
+            danger_data=danger.loc[:,['lat','long']].values.tolist()            
+            drop=functions.plane_drop()
+            context = {'data':leaflet_data,'plane_name':plane_name,'center':center,'table_data':table_data,'danger_data':danger_data,'prob':prob,'device':device,'drop':drop,'val':results}
             
             return render(request,'tracking/collision_detection.html',context)
         else:
