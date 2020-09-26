@@ -1,4 +1,5 @@
 {% extends "base_site.html" %}
+{%load static %}
 {% load leaflet_tags %}
 {% leaflet_js %}
 {% leaflet_css 'C:/Users/Rimsha khan/Desktop/mycss.css' %}
@@ -28,6 +29,7 @@
   
   right: 0;
   top: 0;
+  
 }
 
 @keyframes fade { 
@@ -37,7 +39,43 @@
 .blinking {
   animation: fade 1s infinite alternate;
 }
+.button {
+  font-size: 14px;
+  text-align: center;
+  display: inline-block;
+  transition-duration: 0.1s;
+  background-color: #5779b9; 
+  margin: 4px 2px;
+  padding: 10px 18px;
+  color:white;
+}
+.button:hover {
+  background-color: #6a92dd; /* Green */
+  color: white;
+}
+.planedropdown {
+  font-size: 14px;
+  text-align: center;
+  display: inline-block;
+ 
+  background-color: #759be0; 
+  margin: 4px 2px;
+  padding: 10px 18px;
+  color:white;
+}
+.colplanedropdown {
+  font-size: 14px;
+  text-align: center;
+  display: inline-block;
+
+  background-color: #5779b9; 
+  margin: 4px 2px;
+  padding: 10px 18px;
+  color:white;
+}
+
             </style> 
+            <script src="{% static 'build/leaflet.rotatedMarker.js'%}"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
         <link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
       
@@ -52,18 +90,18 @@
             <form  action='{% url "collision_detection" %}' method="POST">
               {%csrf_token %}
               
-                  <label for="cars"><h3><i class="fa fa-plane teal-color " ></i>  Choose Aircraft:</label>
+                  <label for="plane"><h3><i class="fa fa-plane teal-color " ></i>  Choose Aircraft:</label>
                   
-                  <select style="color:black"  name="cars" id="cars" placeholder=" --Select--">
-                    <option value="" disabled selected hidden>--Select--</option>
+                  <select style="color:white"  name="plane" id="plane" placeholder=" --Select--" class="planedropdown" >
+                    <option value="" disabled selected hidden class="planedropdown">--Select-- </option>
                   
                     {% for d in drop%}
                     {% if  d == val %}
-                    <option  disabled="true" selected > {{val}}</option>
+                    <option  disabled="true" selected class="colplanedropdown"> {{val}}</option>
                     
                     {% else %}
             
-                    <option >{{d}}</option>
+                    <option class="planedropdown">{{d}}</option>
                     {% endif %}
                     
                    {% endfor %}
@@ -71,7 +109,7 @@
                   
                    
                   </select>
-                  <input type="submit" value="Track" >
+                  <input type="submit" value="Track" class="button">
                 </form></h3>
                         </div>
                 </div>
@@ -105,24 +143,24 @@
   var device={{device |safe}};
   var data={{data|safe}};
   
-  var map = L.map('map').setView(center, 14);
+  var map = L.map('map').setView(center, 11);
   var danger_data={{danger_data|safe}};
   
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">I am Rimsha</a> contributors',
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">Collision Detection</a> contributors',
       maxZoom: 18}).addTo(map);  
             
-      var circle = L.circle(center, 18200, {color: 'blue',
-                    fillColor: 'blue',
+      var circle = L.circle(center,50000, {color: '#9999FF',
+                    fillColor: '#9999FF',
                     fillOpacity: 0.5,
                     }).addTo(map); 
-    var circle = L.circle(center, 12000, {color: 'purple',
-                    fillColor: 'purple',
+    var circle = L.circle(center, 36000, {color: '#6666FF',
+                    fillColor: '#6666FF',
                     fillOpacity: 0.5,
                     }).addTo(map); 
   
-    var circle = L.circle(center, 6000, {color: 'red',
-                                                    fillColor: '#f03',
+    var circle = L.circle(center, 18000, {color: '#3333FF',
+                                                    fillColor: '#3333FF',
                                                     fillOpacity: 0.5,
                                                     }).addTo(map); 
 L.Icon.Default.imagePath = 'D:/django/test2/leaflet/';
@@ -135,13 +173,13 @@ var customOptions =
     
     'className' : 'popupCustom'
     }
-function create_marker(x,y,z,name,prob,class_){
+function create_marker(x,y,z,name,prob,ETC,class_,angle,i){
 
-var marker= new L.marker([x,y], {
+var marker= new L.marker([x,y], {rotationAngle: angle,
 icon: L.icon({
-iconUrl: "https://svgsilh.com/svg/307246.svg",
-iconSize: [100, 100],
-rotationAngle: 90,
+iconUrl: 'https://svgsilh.com/svg/26562-'+'ff0000'+'.svg',
+iconSize: [50, 50],
+rotationOrigin:'center center',
 color: "rgb(0,0,100)",
 className: class_,
 })})
@@ -167,7 +205,7 @@ marker.bindPopup('<div id="foo"></div>').on('popupopen', function (e) {
 
 } else {
     if (z=='Danger'){
-marker.bindPopup( "<b>Aircraft ID:</b> "+name+" <br><b>Status:\n</b> "+z+" <br><b>Chances:</b> "+prob*100+"% "+"<br><b>Location: </b>Karachi Airport <br><b>Estimated Time:</b> 19:00" ,customOptions).addTo(map);
+marker.bindPopup( "<b>Aircraft ID:</b> "+name+" <br><b>Status:\n</b> "+z+" <br><b>Chances:</b> "+prob*100+"% "+"<br><b>Location: </b>Karachi Airport <br><b>Estimated Time:</b> "+ETC ,customOptions).addTo(map);
     }else {
         marker.bindPopup("<b>Aircraft ID:</b> "+name+" <br><b>Status: </b>Safe ",customOptions).addTo(map);
   
@@ -179,21 +217,38 @@ var table_data1=[];
 var table_data2=[];
 var table_data3=[];
 var table_data4=[];
+var table_data5=[];
+var table_data6=[];
+var table_data7=[];
+var table_data8=[];
+var table_data9=[];
+var table_data10=[];
+function precise(x) {
+  return Number.parseFloat(x).toPrecision(4);
+}
 for (var i=0; i< data.length;i++){
   if (data[i][2]=='Danger'){
-table_data0.push(data[i][0]);
-table_data1.push(data[i][1]);
-table_data2.push(data[i][2]);
-table_data3.push(data[i][3]);
-table_data4.push(data[i][4]);
+table_data0.push(data[i][3]);
+table_data1.push(precise(data[i][5]));
+table_data2.push(data[i][1]);
+table_data3.push(data[i][0]);
+table_data4.push(data[i][6]);
+table_data5.push(precise(data[i][8]));
+table_data6.push(precise(data[i][9]));
+table_data7.push(data[i][10]);
+table_data8.push(data[i][11]);
+table_data9.push(data[i][12]);
+table_data10.push(precise(data[i][4]));
 }}
-var table_data=[table_data0,table_data1,table_data2,table_data3,table_data4];
+var i='ff0000';
+var table_data=[table_data0,table_data1,table_data2,table_data3,table_data4,table_data5,table_data6,table_data7,table_data8,table_data9,table_data10];
 for (var i=0;i<data.length;i++) //creating markers
 {
 if (data[i][2]=='Danger'){
-create_marker(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],'blinking');
+  
+create_marker(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],'blinking',i);
 }else{
-  create_marker(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],null);
+  create_marker(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],null,data[i][8],i);
 } }
 var polyArray=[];
 function onMapHover(e) {
@@ -210,7 +265,7 @@ polyArray.push(co);
 Line(polyArray,'red');
 }  else {
 var latlngs = [[lt, lng],center];//center point and hover point
-Line(latlngs,'#696969');
+Line(latlngs,'#000099');
 }
 }
 var polyline=[center,center];
@@ -221,7 +276,7 @@ lines.push(polyline);
 }
 function MapClick(e) {
     lt=e.latlng.lat;
-      alert(table_data);
+      //alert(table_data);
 }
 L.Icon.Default.prototype._getIconUrl()
 for (var i=0; i<marks.length;i++){
@@ -236,20 +291,23 @@ marks[i].on('mouseover', onMapHover);
 
 var tab_data = [{
   type: 'table',
-  columnwidth: [1000,1000,1000,1000,1000],
-  columnorder: [0,1,2,3,4],
+  columnwidth: [1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000],
+  columnorder: [0,1,2,3,4,5,6,7,8,9,10],
   header: {
-    values: ['<b>Latitude</b>','<b>Longitude</b>','<b>Status</b>','<b>Device</b>','<b>Probability</b>'],
+    values: ['Device','Estimated Collision Time','Latitude','Longitude','Altitude','Angle','Horizontal Separation','Vertical Separation','Horizontal Position','Vertical Position','Probability'],
     align: "center",
     line: {width: 1, color: 'rgb(50, 50, 50)'},
     fill: {color: ['rgb(235, 100, 230)']},
-    font: {family: "Arial", size: 14, color: "white"}
+    font: {family: "Arial", size: 14, color: "white"},
+    align: ["left", "center"],
+	 height: 20,
   },
   cells: {
     values: table_data,
-    align: ["center", "center"],
+    align: ["left", "center"],
+	 height: 30,
     line: {color: "black", width: 1},
-    fill: {color: ['rgba(228, 222, 249, 0.65)', 'rgba(228, 222, 249, 0.65)','rgba(228, 222, 249, 0.65)','rgb(235, 193, 238)','rgba(228, 222, 249, 0.65)']},
+    fill: {color: ['rgb(235, 193, 238)','rgba(228, 222, 249, 0.65)', 'rgba(228, 222, 249, 0.65)','rgba(228, 222, 249, 0.65)','rgba(228, 222, 249, 0.65)']},
     font: {family: "Arial", size: 13, color: ["black"]}
   }
 }]
@@ -257,7 +315,7 @@ var tab_data = [{
 var layout = {
   paper_bgcolor: "rgba(0,0,0,0)",
  color:'white',
-  'title': {'text':"<b>Aircraft KI76H Collision Detection</b>",'font-color':'white'},
+  'title': {'text':"<b>Aircraft "+ name+" Collision Detection</b>",'font-color':'white'},
   font: {size: 18,color:'white'}
 }
 

@@ -21,7 +21,7 @@ def login(request):
             request.session['dev_name']="No Select"
             #demo_count = session.get('django_plotly_dash', {})
             #demo_count= 'KHIZT'
-            session['django_plotly_dash'] = 'KHIZT' #random vehicle name
+            session['django_plotly_dash'] = 'KC7LZD-9' #random vehicle name
             return redirect('tracking/')
         else:
             return render(request,'tracking/home.html')
@@ -62,13 +62,15 @@ def veh_hist(requests):
     if requests.session.has_key('username') and requests.session.has_key('pass'):
         if requests.session['username']==username1 and requests.session['pass']==password1 :
             m2=functions.history_map()
-            functions.change_var('KI7MH-7')
+            
             drop=functions.vehicle_drop('car')
             
             results='No Select'
         
             if requests.method=="POST":
                 results=requests.POST['cars'] #name of select
+                requests.session['django_plotly_dash']=results
+            results=requests.session['django_plotly_dash']
             context = {'mymap': m2,'drop':drop,'val':results}
             return render(requests,'tracking/vehicle_history.html',context)
         else:
@@ -117,20 +119,23 @@ def collision_detection(request):
     if request.session.has_key('username') and request.session.has_key('pass'):
         if request.session['username']==username1 and request.session['pass']==password1 :
             results='No Select'
-            plane_name=7865317
+            plane_name=10661606
             if request.method=="POST":
-                results=request.POST['cars'] #name of select
-                plane_name=request.POST['cars']
-            data=functions.col_det(plane_name)
-            leaflet_data=data.loc[:,['lat','long','status','device','Prob']].values.tolist()#fetching coordinates
-            table_data=numpy.transpose(leaflet_data)
-            center=[48.0295, -122.992]
-            danger=data[data['status']=='Danger']
-            prob=danger['Prob'].values.tolist()
-            device=danger['device'].values.tolist()
-            danger_data=danger.loc[:,['lat','long']].values.tolist()            
+                results=request.POST['plane'] #name of select
+                plane_name=results
+            fetched_data=functions.col_det(10661606)
+            data=fetched_data['data']
+            leaflet_data=data.loc[:,['Latitude','Longitude','Status','Id','Probability','ETC','Altitude', 'Speed', 'Angle',
+       'Horizontal_Separation', 'Vertical_Separation', 
+       'Horizontal_Position','Vertical_Position',]].values.tolist()#fetching coordinates
+
+            center=fetched_data['center']
+            danger=data[data['Status']=='Danger']
+            prob=danger['Probability'].values.tolist()
+            device=danger['Id'].values.tolist()
+            danger_data=danger.loc[:,['Latitude','Longitude']].values.tolist()           
             drop=functions.plane_drop()
-            context = {'data':leaflet_data,'plane_name':plane_name,'center':center,'table_data':table_data,'danger_data':danger_data,'prob':prob,'device':device,'drop':drop,'val':results}
+            context = {'data':leaflet_data,'plane_name':plane_name,'center':center,'danger_data':danger_data,'prob':prob,'device':device,'drop':drop,'val':results}
             
             return render(request,'tracking/collision_detection.html',context)
         else:
