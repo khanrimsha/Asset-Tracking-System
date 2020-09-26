@@ -8,7 +8,7 @@ import plotly.express as px
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = DjangoDash('HeatMap', external_stylesheets=external_stylesheets)
+app = DjangoDash('HeatMap', external_stylesheets=external_stylesheets, )
 my_data=pd.read_json('C:/Users/Rimsha khan/Desktop/insights/insights/aircrafts.json'
                    )
 fig = go.Figure(go.Densitymapbox(lat=my_data.Lat, lon=my_data.Long, z=my_data.Alt,

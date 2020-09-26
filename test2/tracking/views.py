@@ -7,7 +7,10 @@ import pandas as pd
 from website import views
 username1="rimsha"
 password1="khan"
-
+car_count=functions.car_count
+truck_count=functions.truck_count
+plane_count=4067
+vehicle_count=car_count+truck_count+plane_count
 dev_name="rimsha"
 def login(request):
     if request.method=="POST":
@@ -39,19 +42,10 @@ def logout(request):
 def tracking(request):
     if request.session.has_key('username') and request.session.has_key('pass'):
         if request.session['username']==username1 and request.session['pass']==password1 :
-            url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
-            my_data=pd.read_csv('D:/django/test2/website/data/point.csv')
-            m = folium.Map(location=[20, 0], tiles=url,attr='by Rimsha Khan',zoom_start=2)
-            for i in range(0,len(my_data)):
-                if my_data.iloc[i]['type']=='plane':
-                    logo_icon=folium.features.CustomIcon('D:/django/test2/website/data/my_plane.png',icon_size=(25,25))
-                if my_data.iloc[i]['type']=='car':
-                    logo_icon=folium.features.CustomIcon('D:/django/test2/website/data/car-icon.png',icon_size=(25,25))
-                folium.Marker([my_data.iloc[i][1], my_data.iloc[i][2]], popup=my_data.iloc[i][0],icon=logo_icon).add_to(m),
-            m=m._repr_html_() #updated
-            my_var=functions.var()
-            context = {'my_map': m,'my_var':my_var}
-            return render(request,'tracking/test.html',context)
+            
+            m=functions.current_location()
+            context = {'my_map': m,'truck_count':truck_count,'car_count':car_count,'plane_count':plane_count,'vehicle_count':vehicle_count}
+            return render(request,'tracking/index.html',context)
         else:
             return redirect('/')
     else:
@@ -108,6 +102,7 @@ def insights(request):
             drop=functions.vehicle_drop('car') 
             
             context = {'mymap': m2,'drop':drop,'val':results}
+            
             return render(request,'tracking/insights.html',context)
         else:
             return redirect('/')

@@ -13,68 +13,11 @@
       
         <title> Our Home</title>
         <style type="text/css">
-  .popupCustom .leaflet-popup-tip,
-.popupCustom .leaflet-popup-content-wrapper {
-    background: #e0e0e0;
-    color: #234c5e;
-    font-size: 20px;
-}
-        #foo {
-    width: 300px;
-    height: 150px;}
-            #map {
-                height: 700px;
-  bottom: 0;
-  left: 0;
   
-  right: 0;
-  top: 0;
-  
-}
 
-@keyframes fade { 
-  from { opacity: 0.5; } 
-}
-
-.blinking {
-  animation: fade 1s infinite alternate;
-}
-.button {
-  font-size: 14px;
-  text-align: center;
-  display: inline-block;
-  transition-duration: 0.1s;
-  background-color: #5779b9; 
-  margin: 4px 2px;
-  padding: 10px 18px;
-  color:white;
-}
-.button:hover {
-  background-color: #6a92dd; /* Green */
-  color: white;
-}
-.planedropdown {
-  font-size: 14px;
-  text-align: center;
-  display: inline-block;
- 
-  background-color: #759be0; 
-  margin: 4px 2px;
-  padding: 10px 18px;
-  color:white;
-}
-.colplanedropdown {
-  font-size: 14px;
-  text-align: center;
-  display: inline-block;
-
-  background-color: #5779b9; 
-  margin: 4px 2px;
-  padding: 10px 18px;
-  color:white;
-}
 
             </style> 
+            <link rel="stylesheet" href="{% static 'build/css/mycss.css'%}">
             <script src="{% static 'build/leaflet.rotatedMarker.js'%}"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
         <link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
@@ -107,7 +50,7 @@
                    {% endfor %}
                    
                   
-                   
+                   <i class="fa fa-caret-down"></i>
                   </select>
                   <input type="submit" value="Track" class="button">
                 </form></h3>

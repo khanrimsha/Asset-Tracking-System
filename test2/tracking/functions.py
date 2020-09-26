@@ -16,6 +16,8 @@ vehicle_names={
     'truck':['KE4KMD-14','KD5TBX-14','KC0HT-14','N3EOP-14','K7VR-14','N7QIN-14','PD1HPB-14','KN4JUU-14','F4IKQ-9','WB0HBJ-14','SP4XKS-5','KE8WES-14','KE6UWJ-14','KC2HTC-14']
 
 }
+car_count=len(vehicle_names['car'])
+truck_count=len(vehicle_names['truck'])
 def distance(origin, destination):
     lat1, lon1 = origin
     lat2, lon2 = destination
@@ -215,8 +217,18 @@ def col_det(plane_name):
     datacopy=datacopy.fillna(0)
     return ({'data':datacopy,'center':center_co[0]})
 
-def var():
-    return(8)
+def current_location():
+    url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
+    my_data=pd.read_csv('D:/django/test2/website/data/point.csv')
+    m = folium.Map(location=[20, 0], tiles=url,attr='Current Location',zoom_start=2)
+    for i in range(0,len(my_data)):
+        if my_data.iloc[i]['type']=='plane':
+            logo_icon=folium.features.CustomIcon('D:/django/test2/website/data/my_plane.png',icon_size=(25,25))
+        if my_data.iloc[i]['type']=='car':
+            logo_icon=folium.features.CustomIcon('D:/django/test2/website/data/car-icon.png',icon_size=(25,25))
+        folium.Marker([my_data.iloc[i][1], my_data.iloc[i][2]], popup=my_data.iloc[i][0],icon=logo_icon).add_to(m),
+    m=m._repr_html_() #updated
+    return(m)
 def plane_drop():
     try:
         cred = credentials.Certificate(r"C:\Users\Rimsha khan\Desktop\fire-base\assetdata-5e192-firebase-adminsdk-u026s-04925bb72d.json")

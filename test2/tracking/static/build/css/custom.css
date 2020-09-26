@@ -1694,9 +1694,10 @@ html , body{
        position: relative
    }
    @media (min-width: 992px) {
-       footer {
-           margin-left: 230px
+      footer {
+           margin-left: 0px
        }
+       
    }
    @media (min-width: 992px) {
        .tile_count .tile_stats_count {

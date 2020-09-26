@@ -1,0 +1,61 @@
+.button {
+    font-size: 14px;
+    text-align: center;
+    display: inline-block;
+    transition-duration: 0.1s;
+    background-color: #5779b9; 
+    margin: 4px 2px;
+    padding: 10px 18px;
+    color:white;
+  }
+  .button:hover {
+    background-color: #6a92dd; /* Green */
+    color: white;
+  }
+  .planedropdown {
+    font-size: 14px;
+    text-align: center;
+    display: inline-block;
+   
+    background-color: #759be0; 
+    margin: 4px 2px;
+    padding: 10px 18px;
+    color:white;
+  }
+  .colplanedropdown {
+    font-size: 14px;
+    text-align: center;
+    display: inline-block;
+  
+    background-color: #5779b9; 
+    margin: 4px 2px;
+    padding: 10px 18px;
+    color:white;
+  }
+  .popupCustom .leaflet-popup-tip,
+  .popupCustom .leaflet-popup-content-wrapper {
+      background: #e0e0e0;
+      color: #234c5e;
+      font-size: 20px;
+  }
+          #foo {
+      width: 300px;
+      height: 150px;}
+              #map {
+                  height: 700px;
+    bottom: 0;
+    left: 0;
+    
+    right: 0;
+    top: 0;
+    
+  }
+  
+  @keyframes fade { 
+    from { opacity: 0.5; } 
+  }
+  
+  .blinking {
+    animation: fade 1s infinite alternate;
+  }
+ 
