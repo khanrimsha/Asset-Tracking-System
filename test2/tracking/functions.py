@@ -12,12 +12,12 @@ from io import StringIO
 import math
 
 vehicle_names={
-    'car':["KC7LZD-9","KI7MH-7","SJ2W-9","SM5RVH-9","VA3MSV-9","VE3TEJ-15"],
-    'truck':['KE4KMD-14','KD5TBX-14','KC0HT-14','N3EOP-14','K7VR-14','N7QIN-14','PD1HPB-14','KN4JUU-14','F4IKQ-9','WB0HBJ-14','SP4XKS-5','KE8WES-14','KE6UWJ-14','KC2HTC-14']
+    'Car':["KC7LZD-9","KI7MH-7","SJ2W-9","SM5RVH-9","VA3MSV-9","VE3TEJ-15"],
+    'Truck':['KE4KMD-14','KD5TBX-14','KC0HT-14','N3EOP-14','K7VR-14','N7QIN-14','PD1HPB-14','KN4JUU-14','F4IKQ-9','WB0HBJ-14','SP4XKS-5','KE8WES-14','KE6UWJ-14','KC2HTC-14']
 
 }
-car_count=len(vehicle_names['car'])
-truck_count=len(vehicle_names['truck'])
+car_count=len(vehicle_names['Car'])
+truck_count=len(vehicle_names['Truck'])
 def distance(origin, destination):
     lat1, lon1 = origin
     lat2, lon2 = destination
@@ -257,7 +257,7 @@ def history_map():
     folium.Marker(location=last_co_ords[0],popup='Finish Point',tooltip='<strong>Finish Point</strong>',icon=folium.Icon(color='purple',prefix='fa',icon='anchor')).add_to(m2)
     m2=m2._repr_html_()
     return (m2)
-def get_data(select,date):
+def get_data(type_,select,date):
     database=firebase.FirebaseApplication("https://assetdata-5e192.firebaseio.com/",None)
     try:
         cred = credentials.Certificate(r"C:/Users/Rimsha khan/Desktop/fire-base/assetdata-5e192-firebase-adminsdk-u026s-04925bb72d.json")
@@ -268,14 +268,29 @@ def get_data(select,date):
         
     bucket = storage.bucket('assetdata-5e192.appspot.com')
   
-    url="car/"+select+"/data/"
+    url=type_+"/"+select+"/data/"
     blob = bucket.blob(url)
     d=blob.download_as_string()
     s=str(d,'utf-8')
     data = StringIO(s) 
     data=pd.read_csv(data)
-    if date['start_date'] is None:
-        data=data[data['DATE']=='2020-01-26']
+   
+    
+    if date['end_date'] is not None and date['start_date'] is  None:
+        data=data.tail(29)
+        print('start none')
+    else:
+        if  date['start_date'] == date['end_date']:
+            data[data['DATE']==date['start_date']]
+        elif date['start_date'] < date['end_date']:
+            mask = (data['DATE'] >= date['start_date']) & (data['DATE'] <= date['end_date'])
+        else:
+            mask = (data['DATE'] >= date['end_date']) & (data['DATE'] <= date['start_date'])
+        data = data.loc[mask]
+      
+        
+    
+        
     #file=pd.read_csv('C:/Users/Rimsha khan/Desktop/Extra/test/Power BI/truck_structured_data.csv')
     return (data)
 

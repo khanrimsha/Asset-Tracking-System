@@ -11,7 +11,7 @@ car_count=functions.car_count
 truck_count=functions.truck_count
 plane_count=4067
 vehicle_count=car_count+truck_count+plane_count
-dev_name="rimsha"
+car_name="rimsha"
 def login(request):
     if request.method=="POST":
                  
@@ -21,10 +21,13 @@ def login(request):
             session = request.session
             request.session['username'] = username
             request.session['pass'] = password
-            request.session['dev_name']="No Select"
+            request.session['car_name']="KC7LZD-9"
+            request.session['truck_name']="KE4KMD-14"
+            request.session['car/truck']='Car'
             #demo_count = session.get('django_plotly_dash', {})
             #demo_count= 'KHIZT'
-            session['django_plotly_dash'] = 'KC7LZD-9' #random vehicle name
+            initial={'dev':'KC7LZD-9','car/truck':'Car'}
+            session['django_plotly_dash'] = initial #random vehicle name
             return redirect('tracking/')
         else:
             return render(request,'tracking/home.html')
@@ -33,9 +36,11 @@ def login(request):
 def logout(request):
     try:
         del request.session['django_plotly_dash']
+        del request.session['car/truck']
         del request.session['username']
         del request.session['pass']
-        del request.session['dev_name']
+        del request.session['car_name']
+        del request.session['truck_name']
     except:
         pass
     return render(request,'tracking/logout.html',{})
@@ -55,17 +60,44 @@ def veh_hist(requests):
 
     if requests.session.has_key('username') and requests.session.has_key('pass'):
         if requests.session['username']==username1 and requests.session['pass']==password1 :
+       
             m2=functions.history_map()
-            
-            drop=functions.vehicle_drop('car')
-            
+         
             results='No Select'
-        
+            
+            try:
+                
+                car_truck=requests.GET['car_truck']
+                requests.session['car/truck']=car_truck
+            
+            except:
+                pass
+            car_truck=requests.session['car/truck']
+            requests.session['django_plotly_dash']['car/truck']=car_truck
+            drop=functions.vehicle_drop(car_truck)
+            #requests.session['car_name']=results
+            #results=requests.session['django_plotly_dash']
             if requests.method=="POST":
+               
                 results=requests.POST['cars'] #name of select
-                requests.session['django_plotly_dash']=results
-            results=requests.session['django_plotly_dash']
-            context = {'mymap': m2,'drop':drop,'val':results}
+              
+                
+                if car_truck=='Car':
+                    requests.session['car_name']=results
+                    
+                else:
+                    requests.session['truck_name']=results
+            if car_truck=='Car':
+                requests.session['django_plotly_dash']['dev']=requests.session['car_name']
+                display='Truck'   
+            else:
+                requests.session['django_plotly_dash']['dev']=requests.session['truck_name']
+                display='Car'
+            
+                
+            results=requests.session['django_plotly_dash']['dev']
+
+            context = {'mymap': m2,'drop':drop,'val':results,'ct':car_truck,'car_count':car_count,'truck_count':truck_count,'plane_count':plane_count,'vehicle_count':vehicle_count,'display':display}
             return render(requests,'tracking/vehicle_history.html',context)
         else:
             return redirect('/')
@@ -94,12 +126,12 @@ def insights(request):
         
             if request.method=="POST":
                 results=request.POST['cars'] #name of select
-                request.session['dev_name']=results
+                request.session['car_name']=results
                 request.session['django_plotly_dash']=results
 
               
-            results=request.session['dev_name']
-            drop=functions.vehicle_drop('car') 
+            results=request.session['car_name']
+            drop=functions.vehicle_drop('Car') 
             
             context = {'mymap': m2,'drop':drop,'val':results}
             
