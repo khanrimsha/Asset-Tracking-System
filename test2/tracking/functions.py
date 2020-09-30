@@ -10,6 +10,10 @@ import datetime
 import json
 from io import StringIO
 import math
+import time
+import random
+import datetime
+import requests
 
 vehicle_names={
     'Car':["KC7LZD-9","KI7MH-7","SJ2W-9","SM5RVH-9","VA3MSV-9","VE3TEJ-15"],
@@ -58,12 +62,7 @@ def col_det(plane_name):
     data=database.get()
     data_json = json.loads(data)
     data=pd.DataFrame(data_json)
-    center_df=data[data['Id']==plane_name]#fetching center data
-    center_co=center_df.loc[:,['Lat','Long']].values.tolist()    
-
-    center_info={'Id':plane_name , 'Datetime':0, 'Latitude':center_co[0][0], 'Longitude':center_co[0][1], 'Altitude':0, 'Speed':0, 'Angle':0,
-       'Horizontal_Separation':0, 'Vertical_Separation':0, 'Vertical_Position':'A',
-       'Horizontal_Position':"R", 'Status':'Safe', 'Probability':0, 'ETC':0}
+    
     check_for=plane_name 
     #Processing
 
@@ -86,6 +85,8 @@ def col_det(plane_name):
     lat_check=lat_check.values[0]
     long_check=data.loc[data["Id"]==check_for,"Long"]
     long_check=long_check.values[0]
+    datacopy['Probability']=0
+    datacopy['ETC']="-"
     #seond try
     for index,row in datacopy.iterrows():
         datacopy.loc[index,"Distance_2d"]=distance(origin,(datacopy.loc[index,"Lat"],datacopy.loc[index,"Long"]))
@@ -99,6 +100,8 @@ def col_det(plane_name):
             datacopy.loc[index,"Vertical_Position"]="Below"
         else:
             datacopy.loc[index,"Vertical_Position"]="Same"
+        datacopy.loc[index,"Alt_diff"]=abs(datacopy.loc[index,"Alt_diff"])
+
 
         if long_check<datacopy.loc[index,"Long"] and lat_check<datacopy.loc[index,"Lat"]: 
             datacopy.loc[index,"Horizontal_Position"]="Right, Front"
@@ -118,9 +121,7 @@ def col_det(plane_name):
             datacopy.loc[index,"Horizontal_Position"]="Left"
         else:
             datacopy.loc[index,"Horizontal_Position"]="Same"
-
-
-
+            
         if datacopy.loc[index,"Alt"]<=lowest_Alt:
             if datacopy.loc[index,"Alt_diff"]<=vertical_separation_below and datacopy.loc[index,"Distance_2d"]<=horizontal_separation:
                 datacopy.loc[index,"Status"]="Danger"
@@ -212,23 +213,95 @@ def col_det(plane_name):
     # result
     del datacopy["Distance_3d"]
     del datacopy["angle_diff"]
-    datacopy.columns=["Id","Datetime","Latitude","Longitude","Altitude","Speed","Angle","Horizontal_Separation","Vertical_Separation","Vertical_Position","Horizontal_Position","Status","Probability","ETC"]
+    datacopy.columns=["Id","Datetime","Latitude","Longitude","Altitude","Speed","Angle","Probability","ETC","Horizontal_Separation","Vertical_Separation","Vertical_Position","Horizontal_Position","Status"]
+    center_lat=origin[0]
+    center_long=origin[1]
+    center_co=[center_lat,center_long]   
+
+    center_info={'Id':plane_name , 'Datetime':0, 'Latitude':center_lat, 'Longitude':center_long, 'Altitude':Alt_check, 'Speed':speed_check, 'Angle':angle_check,
+       'Horizontal_Separation':0, 'Vertical_Separation':0, 'Vertical_Position':'A',
+       'Horizontal_Position':"R", 'Status':'Safe', 'Probability':0, 'ETC':0}
     datacopy=datacopy.append(center_info,ignore_index=True)
     datacopy=datacopy.fillna(0)
-    return ({'data':datacopy,'center':center_co[0]})
-
-def current_location():
+    return ({'data':datacopy,'center':center_co})
+def rev_geocoding(lat,long):
+    location = geolocator.reverse(str(lat)+", "+str(long))
+    return location.address
+def live_data(veh,typpe):
+    time.sleep(0.5)
+    APIKEY=["141121.N6hQcajR5XAwbq","134290.YYwA7u6Ukgnzhn","133560.vm6ZT5uyI93BgXe"]
+    api_key=random.choice(APIKEY)
+    API="https://api.aprs.fi/api/get?name="+veh+"&what=loc&apikey="+api_key+"&format=json"
+    response=requests.get(API)
+    status=response.status_code
+    entry=(response.json())['entries']
+    entry[0]["vehicle_type"]=typpe
+    print(f"{veh}-----------{status}")
+    return entry[0]  
+    
+def firebase_location():
+    database=firebase.FirebaseApplication("https://assetdata-5e192.firebaseio.com/",None)
+    try:
+        cred = credentials.Certificate(r"C:/Users/Rimsha khan/Desktop/fire-base/assetdata-5e192-firebase-adminsdk-u026s-04925bb72d.json")
+        firebase_admin.initialize_app(cred,{"databaseURL":"https://assetdata-5e192.firebaseio.com/",
+                                       'storageBucket': 'assetdata-5e192.appspot.com'})
+    except:
+        pass
+    database=db.reference("livedata/")
+    d=database.get()
+    data_json = json.loads(d)
+    my_data=pd.DataFrame(data_json)
     url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
-    my_data=pd.read_csv('D:/django/test2/website/data/point.csv')
+    
     m = folium.Map(location=[20, 0], tiles=url,attr='Current Location',zoom_start=2)
     for i in range(0,len(my_data)):
-        if my_data.iloc[i]['type']=='plane':
-            logo_icon=folium.features.CustomIcon('D:/django/test2/website/data/my_plane.png',icon_size=(25,25))
-        if my_data.iloc[i]['type']=='car':
+        if my_data.iloc[i]['vehicle_type'].lower()=='truck':
+            logo_icon=folium.features.CustomIcon('D:/django/test2/website/data/truck.png',icon_size=(25,25))
+        if my_data.iloc[i]['vehicle_type'].lower()=='car':
             logo_icon=folium.features.CustomIcon('D:/django/test2/website/data/car-icon.png',icon_size=(25,25))
-        folium.Marker([my_data.iloc[i][1], my_data.iloc[i][2]], popup=my_data.iloc[i][0],icon=logo_icon).add_to(m),
-    m=m._repr_html_() #updated
-    return(m)
+        folium.Marker([my_data.iloc[i][2], my_data.iloc[i][3]], popup="ID: "+my_data.iloc[i][0]+"TIME: "+my_data.iloc[i][1],icon=logo_icon).add_to(m),
+    m=m._repr_html_()
+    return (m)
+def current_location():
+    database=firebase.FirebaseApplication("https://assetdata-5e192.firebaseio.com/",None)
+    try:
+        cred = credentials.Certificate(r"C:/Users/Rimsha khan/Desktop/fire-base/assetdata-5e192-firebase-adminsdk-u026s-04925bb72d.json")
+        firebase_admin.initialize_app(cred,{"databaseURL":"https://assetdata-5e192.firebaseio.com/",
+                                       'storageBucket': 'assetdata-5e192.appspot.com'})
+    except:
+        pass 
+    #live API
+    data_list=[]
+    try:
+        for typpe,assets in vehicle_names.items():
+            for veh in assets:
+                data_list.append(live_data(veh,typpe))
+        print("SUCCESSFULLY RETRIEVED FROM API")
+        my_data=pd.DataFrame(data_list)
+        my_data=my_data.loc[:,["name","time","lat","lng","vehicle_type"]]
+        my_data["time"]=my_data["time"].apply(lambda x: datetime.datetime.fromtimestamp(int(x)).strftime('%Y-%m-%d %H:%M:%S'))
+        data_json=my_data.to_json()
+        database=db.reference()
+        upload=database.child("livedata/")
+        upload.set(data_json)
+        print("SUCESSFULY UPLOADED")
+        #map
+        url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
+        
+        m = folium.Map(location=[20, 0], tiles=url,attr='Current Location',zoom_start=2)
+        for i in range(0,len(my_data)):
+            if my_data.iloc[i]['vehicle_type'].lower()=='truck':
+                logo_icon=folium.features.CustomIcon('D:/django/test2/website/data/truck.png',icon_size=(25,25))
+            if my_data.iloc[i]['vehicle_type'].lower()=='car':
+                logo_icon=folium.features.CustomIcon('D:/django/test2/website/data/car-icon.png',icon_size=(25,25))
+            folium.Marker([my_data.iloc[i][2], my_data.iloc[i][3]], popup="ID: "+my_data.iloc[i][0]+"TIME: "+my_data.iloc[i][1],icon=logo_icon).add_to(m),
+        m=m._repr_html_() #updated
+        return(m)
+    except:
+        print("limit Exceed")
+        firebase_location()
+        
+    
 def plane_drop():
     try:
         cred = credentials.Certificate(r"C:\Users\Rimsha khan\Desktop\fire-base\assetdata-5e192-firebase-adminsdk-u026s-04925bb72d.json")
@@ -287,6 +360,8 @@ def get_data(type_,select,date):
         else:
             mask = (data['DATE'] >= date['end_date']) & (data['DATE'] <= date['start_date'])
         data = data.loc[mask]
+    
+    
       
         
     

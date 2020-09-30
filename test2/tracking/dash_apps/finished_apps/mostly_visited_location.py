@@ -192,7 +192,8 @@ def creategraph(dff):
     figure = go.Figure(data=[go.Pie(labels=location, values=values, textinfo='label+percent',
                              insidetextorientation='radial',hole=0.3,domain = {'x': [0, 1], 'y': [0, 1]},
                             )])
-    figure.update_layout(title_text='<b>Mostly Visited Location</b>',autosize=False,
+    figure.update_layout(#title_text='<b>Mostly Visited Location</b>',
+    autosize=False,
     paper_bgcolor='rgba(0,0,0)',
 height = 500,
 width = 400,

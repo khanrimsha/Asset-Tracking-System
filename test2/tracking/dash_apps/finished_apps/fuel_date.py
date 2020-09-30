@@ -66,10 +66,10 @@ def gen_traces(selected_name):
         
         paper_bgcolor='rgba(0,0,0)',
         plot_bgcolor='rgb(0,0,0)',
-        xaxis={'autorange':True},
+        xaxis={'autorange':True,'title':'Date'},
         
         yaxis = dict(range=[0,5],title='Fuel Consumed(in litres)'),
-        title="Daily Fuel Consumed",
+        #title="Daily Fuel Consumed",
         font=dict(color='white'),
            
         )

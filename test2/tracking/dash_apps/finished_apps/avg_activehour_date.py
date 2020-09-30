@@ -13,7 +13,9 @@ from django.conf import settings
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 plane_var='rim'
 
-app = DjangoDash('AvgActiveHourDate',add_bootstrap_links=True, external_stylesheets=external_stylesheets)
+app = DjangoDash('AvgActiveHourDate',
+#add_bootstrap_links=True,
+ external_stylesheets=external_stylesheets)
 
 fuel_used=pd.read_csv('C:/Users/Rimsha khan/Desktop/insights/insights/Activehours_date.csv')
 options=['All','January','February','March','April','May','June','July','August','September','October','November','December']
@@ -59,9 +61,9 @@ def gen_traces(selected_name,msg):
         plot_bgcolor='rgb(0,0,0)',
         
        # xaxis={'autorange':True,'title':'Date','fixedrange':True},
-        xaxis = dict(title=plane_var,type='date'),
+        xaxis = dict(type='date'),
         yaxis = dict(range=[0,fuel_used['Active_hours'].max()],title='Hours'),
-        title=msg,
+        
         font=dict(color='white'),
            
         )

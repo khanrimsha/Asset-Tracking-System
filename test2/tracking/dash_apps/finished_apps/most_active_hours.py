@@ -21,7 +21,7 @@ fig.add_trace(go.Scatter(x=y, y=my_data['Activation_count'],hovertemplate =
 
 
 fig.update_layout(xaxis={'title':'<b>Hour</b>'},
-        yaxis={},font_family="Times New Roman",template="simple_white",
+        yaxis={'title':'<b>Hour Count</b>'},font_family="Times New Roman",template="simple_white",
         title={
         
         'y':0.9,

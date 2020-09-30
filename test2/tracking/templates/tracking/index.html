@@ -44,10 +44,11 @@
           <div class="count "><i class='fas fa-home' style='font-size:30px;'></i> Home</div>
        </div>
       <div class="col-md-2 col-sm-2 col-xs-6 " >
-      
-        <div class="count green"><button class="button" id="live_track" onclick="location.href='{% url 'tracking' %}';">
+      <form action="{% url 'tracking' %}" method="POST">
+        {%csrf_token %}
+        <div class="count green"><button class="button" type="submit"  value="True" name="live-track" >
           Live Update
-        </button></div>
+        </button></div></form>
        
    
       </div>

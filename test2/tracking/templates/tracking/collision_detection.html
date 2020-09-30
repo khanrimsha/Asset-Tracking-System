@@ -93,17 +93,17 @@
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">Collision Detection</a> contributors',
       maxZoom: 18}).addTo(map);  
             
-      var circle = L.circle(center,50000, {color: '#9999FF',
-                    fillColor: '#9999FF',
+      var circle = L.circle(center,18200, {color: '#FC5044',
+                    fillColor: '#FC5044',
                     fillOpacity: 0.5,
                     }).addTo(map); 
-    var circle = L.circle(center, 36000, {color: '#6666FF',
-                    fillColor: '#6666FF',
+    var circle = L.circle(center, 12000, {color: '#FC3426',
+                    fillColor: '#FC3426',
                     fillOpacity: 0.5,
                     }).addTo(map); 
   
-    var circle = L.circle(center, 18000, {color: '#3333FF',
-                                                    fillColor: '#3333FF',
+    var circle = L.circle(center, 6000, {color: '#FF1F0F',
+                                                    fillColor: '#FF1F0F',
                                                     fillOpacity: 0.5,
                                                     }).addTo(map); 
 L.Icon.Default.imagePath = 'D:/django/test2/leaflet/';
@@ -119,9 +119,10 @@ var customOptions =
 function create_marker(x,y,z,name,prob,ETC,class_,angle,i){
 
 var marker= new L.marker([x,y], {rotationAngle: angle,
+
 icon: L.icon({
-iconUrl: 'https://svgsilh.com/svg/26562-'+'ff0000'+'.svg',
-iconSize: [50, 50],
+iconUrl: 'https://svgsilh.com/svg/295396.svg',
+iconSize: [30, 30],
 rotationOrigin:'center center',
 color: "rgb(0,0,100)",
 className: class_,
@@ -166,11 +167,12 @@ var table_data7=[];
 var table_data8=[];
 var table_data9=[];
 var table_data10=[];
+var table_data11=[];
 function precise(x) {
   return Number.parseFloat(x).toPrecision(4);
 }
 for (var i=0; i< data.length;i++){
-  if (data[i][2]=='Danger'){
+  if (data[i][9]<=18.52 && data[i][0]!=center[0] && data[i][1]!= center[1]){
 table_data0.push(data[i][3]);
 table_data1.push(precise(data[i][5]));
 table_data2.push(data[i][1]);
@@ -182,9 +184,10 @@ table_data7.push(data[i][10]);
 table_data8.push(data[i][11]);
 table_data9.push(data[i][12]);
 table_data10.push(precise(data[i][4]));
+table_data11.push(data[i][2]);
 }}
 var i='ff0000';
-var table_data=[table_data0,table_data1,table_data2,table_data3,table_data4,table_data5,table_data6,table_data7,table_data8,table_data9,table_data10];
+var table_data=[table_data0,table_data1,table_data2,table_data3,table_data4,table_data5,table_data6,table_data7,table_data8,table_data9,table_data10,table_data11];
 for (var i=0;i<data.length;i++) //creating markers
 {
 if (data[i][2]=='Danger'){
@@ -234,10 +237,10 @@ marks[i].on('mouseover', onMapHover);
 
 var tab_data = [{
   type: 'table',
-  columnwidth: [1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000],
-  columnorder: [0,1,2,3,4,5,6,7,8,9,10],
+  columnwidth: [1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000],
+  columnorder: [0,1,2,3,4,5,6,7,8,9,10,11],
   header: {
-    values: ['Device','Estimated Collision Time','Latitude','Longitude','Altitude','Angle','Horizontal Separation','Vertical Separation','Horizontal Position','Vertical Position','Probability'],
+    values: ['ID','Estimated Collision Time','Latitude','Longitude','Altitude','Angle','Horizontal Separation','Vertical Separation','Horizontal Position','Vertical Position','Probability','Status'],
     align: "center",
     line: {width: 1, color: 'rgb(50, 50, 50)'},
     fill: {color: ['rgb(235, 100, 230)']},

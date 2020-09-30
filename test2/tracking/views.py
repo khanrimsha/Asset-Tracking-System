@@ -5,8 +5,8 @@ import folium
 import numpy
 import pandas as pd
 from website import views
-username1="rimsha"
-password1="khan"
+username1="group_43"
+password1="cis"
 car_count=functions.car_count
 truck_count=functions.truck_count
 plane_count=4067
@@ -24,6 +24,7 @@ def login(request):
             request.session['car_name']="KC7LZD-9"
             request.session['truck_name']="KE4KMD-14"
             request.session['car/truck']='Car'
+            request.session['live_track']='False'
             #demo_count = session.get('django_plotly_dash', {})
             #demo_count= 'KHIZT'
             initial={'dev':'KC7LZD-9','car/truck':'Car'}
@@ -41,6 +42,7 @@ def logout(request):
         del request.session['pass']
         del request.session['car_name']
         del request.session['truck_name']
+        del request.session['live_track']
     except:
         pass
     return render(request,'tracking/logout.html',{})
@@ -48,7 +50,23 @@ def tracking(request):
     if request.session.has_key('username') and request.session.has_key('pass'):
         if request.session['username']==username1 and request.session['pass']==password1 :
             
-            m=functions.current_location()
+            track="False"
+            try:
+                track=request.POST['live-track']
+                request.session['live_track']=track
+            except:
+                pass
+                
+            track=request.session['live_track']
+            
+            if track=='False':
+                m=functions.firebase_location()
+                print("I am firebase")
+            else:
+                m=functions.current_location()
+                print('I am post')
+            
+            request.session['live_track']='False'
             context = {'my_map': m,'truck_count':truck_count,'car_count':car_count,'plane_count':plane_count,'vehicle_count':vehicle_count}
             return render(request,'tracking/index.html',context)
         else:
@@ -61,7 +79,7 @@ def veh_hist(requests):
     if requests.session.has_key('username') and requests.session.has_key('pass'):
         if requests.session['username']==username1 and requests.session['pass']==password1 :
        
-            m2=functions.history_map()
+            
          
             results='No Select'
             
@@ -97,7 +115,7 @@ def veh_hist(requests):
                 
             results=requests.session['django_plotly_dash']['dev']
 
-            context = {'mymap': m2,'drop':drop,'val':results,'ct':car_truck,'car_count':car_count,'truck_count':truck_count,'plane_count':plane_count,'vehicle_count':vehicle_count,'display':display}
+            context = {'drop':drop,'val':results,'ct':car_truck,'car_count':car_count,'truck_count':truck_count,'plane_count':plane_count,'vehicle_count':vehicle_count,'display':display}
             return render(requests,'tracking/vehicle_history.html',context)
         else:
             return redirect('/')
@@ -123,17 +141,38 @@ def insights(request):
             folium.Marker(location=last_co_ords[0],popup='Finish Point',tooltip='<strong>Finish Point</strong>',icon=folium.Icon(color='purple',prefix='fa',icon='anchor')).add_to(m2)
             m2=m2._repr_html_()
             results='No Select'
-        
-            if request.method=="POST":
-                results=request.POST['cars'] #name of select
-                request.session['car_name']=results
-                request.session['django_plotly_dash']=results
-
-              
-            results=request.session['car_name']
-            drop=functions.vehicle_drop('Car') 
+            try:
+                
+                car_truck=requests.GET['car_truck']
+                request.session['car/truck']=car_truck
             
-            context = {'mymap': m2,'drop':drop,'val':results}
+            except:
+                pass
+            car_truck=request.session['car/truck']
+            request.session['django_plotly_dash']['car/truck']=car_truck
+            drop=functions.vehicle_drop(car_truck)
+            #requests.session['car_name']=results
+            #results=requests.session['django_plotly_dash']
+            if request.method=="POST":
+               
+                results=request.POST['cars'] #name of select
+              
+                
+                if car_truck=='Car':
+                    request.session['car_name']=results
+                    
+                else:
+                    request.session['truck_name']=results
+            if car_truck=='Car':
+                request.session['django_plotly_dash']['dev']=request.session['car_name']
+                display='Truck'   
+            else:
+                request.session['django_plotly_dash']['dev']=request.session['truck_name']
+                display='Car'
+            
+            
+            
+            context = {'mymap': m2,'drop':drop,'val':results,'car_count':car_count,'truck_count':truck_count,'plane_count':plane_count,'vehicle_count':vehicle_count,'display':display}
             
             return render(request,'tracking/insights.html',context)
         else:
@@ -150,7 +189,7 @@ def collision_detection(request):
             if request.method=="POST":
                 results=request.POST['plane'] #name of select
                 plane_name=results
-            fetched_data=functions.col_det(10661606)
+            fetched_data=functions.col_det(int(plane_name))
             data=fetched_data['data']
             leaflet_data=data.loc[:,['Latitude','Longitude','Status','Id','Probability','ETC','Altitude', 'Speed', 'Angle',
        'Horizontal_Separation', 'Vertical_Separation', 
