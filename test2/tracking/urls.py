@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from tracking.dash_apps.finished_apps import simpleexample ,mostly_taken_route,bar_chart,history,mostly_visited_location,hour_gauge,most_active_hours,highest_speed_gauge,fuel_week,fuel_date,avg_activehour_date,avg_activehour_week,density_heat_map,avg_distance
+from tracking.dash_apps.finished_apps import simpleexample,avg_weekly_no_hrs ,mostly_taken_route,bar_chart,history,mostly_visited_location,hour_gauge,most_active_hours,highest_speed_gauge,fuel_week,fuel_date,avg_activehour_date,avg_activehour_week,density_heat_map,avg_distance
 
 urlpatterns = [
 path('tracking/',views.tracking,name='tracking'),

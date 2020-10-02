@@ -18,6 +18,7 @@ fig = go.Figure()
 fig.add_trace(go.Indicator(
     mode = "gauge+number",
     value = speed,
+    number= dict( suffix= "<br>km/hr" ),
     domain = {'x': [0, 1], 'y': [0, 1]},gauge = {'axis': {'range': [0 ,250]},'bar': {'color': "green"},'bgcolor': "black",
         'borderwidth': 2,
         'bordercolor': "darkgreen"},

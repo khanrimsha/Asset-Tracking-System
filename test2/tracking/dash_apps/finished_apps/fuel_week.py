@@ -4,21 +4,9 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 from django_plotly_dash import DjangoDash
 import pandas as pd
-from firebase import firebase
-from firebase import firebase
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import db
-import json
-try:
-    cred = credentials.Certificate(r"C:/Users/Rimsha khan/Desktop/fire-base/assetdata-5e192-firebase-adminsdk-u026s-04925bb72d.json")
-    firebase_admin.initialize_app(cred,{"databaseURL":"https://assetdata-5e192.firebaseio.com/"})
-except:
-    pass
-database=db.reference("car/KC7LZD-9/insights/Fuel_consumed_week/")
-d=database.get()
-data_json = json.loads(d)
-fuel_used_week=pd.DataFrame(data_json)
+from tracking import functions
+session_val=None
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -34,10 +22,7 @@ app.layout = html.Div([
     
     dcc.RadioItems(
                 id="Month",
-                options=[{
-                    'label': i,
-                    'value': i
-                } for i in options],
+               
                 value='Weekly',
                 
                 style={'color':'white'},
@@ -49,11 +34,17 @@ app.layout = html.Div([
 
 
 
-@app.callback(
+@app.expanded_callback(
             Output('slider-graph', 'figure'),
             [Input('Month', 'value')])
-def display_value(value):
-   
+def display_value(value,**kwargs):
+    global session_val
+    session_val=kwargs["session_state"]
+    dev=session_val['dev']
+    type_=session_val['car/truck'].lower()
+ 
+    fuel_used_week=functions.fetch_insight(type_,dev,'Fuel_consumed_week')
+    
     if value=='Weekly':
         
         x= fuel_used_week['week_day']

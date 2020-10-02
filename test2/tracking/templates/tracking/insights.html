@@ -91,7 +91,7 @@
 
           <div class="row x_title">
             <div class="col-md-6">
-              <h3 style='color:white;'><i class="fa fa-clock-o" style="font-size:24px;color:yellow;"></i> Busy Period <small> {{val}}</small></h3>
+              <h3 style='color:white;'><i class="fa fa-clock-o" style="font-size:24px;color:yellow;"></i> Estimated Activation Period <small> {{val}}</small></h3>
             </div>
             <div class="col-md-6 ">
               <h3><i class="fa fa-square-o fa-pull-right" style="font-size:24px;color:yellow;"></i> </h3>
@@ -164,17 +164,17 @@
 
           <div class="row x_title">
             <div class="col-md-6">
-              <h3 style='color:white;'><i class="fa fa-clock-o" style="font-size:24px;color:yellow;"></i> Most Taken Route</h3>
+              <h3 style='color:white;'><i class="fa fa-road" style="font-size:24px;color:yellow;"> </i> Most Taken Routes</h3>
             </div>
             <div class="col-md-6 ">
-              <h3><i class="fa fa-road" style="font-size:24px;color:yellow;"> </i> </h3>
+              <h3> </h3>
             </div>
           </div>
 
           <div class="col-md-12 col-sm-12 col-xs-12">
             
               <div class="{% plotly_class name='Most_Taken_Route'%} card" style="height:100%;width:100%">
-                {% plotly_app name='Most_Taken_Route' ratio=0.7 %}
+                {% plotly_app name='Most_Taken_Route' ratio=1 %}
                
                     </div> 
            
@@ -237,7 +237,7 @@
 
       <div class="col-md-4 col-sm-4 col-xs-12" style="background-color:black;border-style: solid;
       border-color: rgb(224, 219, 219)">
-        <div class="x_panel tile fixed_height_320" style="background-color:black;" >
+        <div class="x_panel tile fixed_height_460" style="background-color:black;" >
           <div class="x_title">
             <h2 style='color:white;'><i class="fa fa-clock-o" style="font-size:24px;color:rgb(12, 247, 110);"> </i> Peak Hour</h2>
             
@@ -255,15 +255,18 @@
 
       <div class="col-md-8 col-sm-8 col-xs-12" style="background-color:black;border-style: solid;
       border-color: rgb(224, 219, 219)">
-        <div class="x_panel tile fixed_height_320 overflow_hidden" style="background-color:black;">
+        <div class="x_panel tile fixed_height_420 overflow_hidden" style="background-color:black;">
           <div class="x_title">
-            <h2 style='color:white;'><i class="fa fa-road" style="font-size:24px;color:yellow;"> </i> Mostly Taken Route</h2>
+            <h2 style='color:white;'><i class="fa fa-clock-o" style="font-size:24px;color:rgb(12, 247, 110);"> </i> Estimated Activation Count</h2>
            
             <div class="clearfix"></div>
           </div>
-          <div class="x_content">
+          <div class="x_content" style="background-color:black;">
 
-            {{ mymap|safe }}  
+            <div class="{% plotly_class name='Avg_Weekly_No_Hrs'%} card" style="width:100%;background-color:black;">
+              {% plotly_app name='Avg_Weekly_No_Hrs' ratio=0.5 %}
+             
+                  </div>
           </div>
           
         </div>
@@ -279,7 +282,7 @@
       border-color: rgb(224, 219, 219)">
         <div class="x_panel" style="background-color:black;">
           <div class="x_title">
-            <h2 style='color:white;'><i class="fa fa-clock-o" style="font-size:24px;color:rgb(235, 170, 218);"> </i> Most Active Hours</h2>
+            <h2 style='color:white;'><i class="fa fa-clock-o" style="font-size:24px;color:rgb(235, 170, 218);"> </i> Busy Period</h2>
             
             <div class="clearfix"></div>
           </div>
@@ -296,7 +299,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel" style="background-color:black;">
           <div class="x_title">
-            <h2 style='color:white;'><i class="fa fa-map-signs" aria-hidden="true" style="font-size:24px;color:rgb(214, 39, 39);"></i> Most Visited Location </h2>
+            <h2 style='color:white;'><i class="fa fa-map-signs" aria-hidden="true" style="font-size:24px;color:rgb(214, 39, 39);"></i> Most Visited Locations </h2>
            
             <div class="clearfix"></div>
           </div>
@@ -318,7 +321,7 @@
           <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel" style="background-color:black;">
               <div class="x_title">
-                <h2 style='color:white;'> <i class="fa fa-calendar-o"  style="font-size:24px;color:rgb(11, 11, 247);"></i> Average Active Hours <small>On Daily Basis</small></h2>
+                <h2 style='color:white;'> <i class="fa fa-calendar-o"  style="font-size:24px;color:rgb(11, 11, 247);"></i> Daily Activation Count </h2>
                 
                 <div class="clearfix"></div>
               </div>
@@ -360,7 +363,7 @@
           <div class="col-md-4 col-sm-4 col-xs-12">
             <div class="x_panel" style="background-color:black;">
               <div class="x_title">
-                <h2 style='color:white;'><svg width= '24' aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tachometer-alt" class="svg-inline--fa fa-tachometer-alt fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="green" d="M288 32C128.94 32 0 160.94 0 320c0 52.8 14.25 102.26 39.06 144.8 5.61 9.62 16.3 15.2 27.44 15.2h443c11.14 0 21.83-5.58 27.44-15.2C561.75 422.26 576 372.8 576 320c0-159.06-128.94-288-288-288zm0 64c14.71 0 26.58 10.13 30.32 23.65-1.11 2.26-2.64 4.23-3.45 6.67l-9.22 27.67c-5.13 3.49-10.97 6.01-17.64 6.01-17.67 0-32-14.33-32-32S270.33 96 288 96zM96 384c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm48-160c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm246.77-72.41l-61.33 184C343.13 347.33 352 364.54 352 384c0 11.72-3.38 22.55-8.88 32H232.88c-5.5-9.45-8.88-20.28-8.88-32 0-33.94 26.5-61.43 59.9-63.59l61.34-184.01c4.17-12.56 17.73-19.45 30.36-15.17 12.57 4.19 19.35 17.79 15.17 30.36zm14.66 57.2l15.52-46.55c3.47-1.29 7.13-2.23 11.05-2.23 17.67 0 32 14.33 32 32s-14.33 32-32 32c-11.38-.01-20.89-6.28-26.57-15.22zM480 384c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32z"></path></svg> Speed Gauge </h2>
+                <h2 style='color:white;'><svg width= '24' aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tachometer-alt" class="svg-inline--fa fa-tachometer-alt fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="green" d="M288 32C128.94 32 0 160.94 0 320c0 52.8 14.25 102.26 39.06 144.8 5.61 9.62 16.3 15.2 27.44 15.2h443c11.14 0 21.83-5.58 27.44-15.2C561.75 422.26 576 372.8 576 320c0-159.06-128.94-288-288-288zm0 64c14.71 0 26.58 10.13 30.32 23.65-1.11 2.26-2.64 4.23-3.45 6.67l-9.22 27.67c-5.13 3.49-10.97 6.01-17.64 6.01-17.67 0-32-14.33-32-32S270.33 96 288 96zM96 384c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm48-160c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32zm246.77-72.41l-61.33 184C343.13 347.33 352 364.54 352 384c0 11.72-3.38 22.55-8.88 32H232.88c-5.5-9.45-8.88-20.28-8.88-32 0-33.94 26.5-61.43 59.9-63.59l61.34-184.01c4.17-12.56 17.73-19.45 30.36-15.17 12.57 4.19 19.35 17.79 15.17 30.36zm14.66 57.2l15.52-46.55c3.47-1.29 7.13-2.23 11.05-2.23 17.67 0 32 14.33 32 32s-14.33 32-32 32c-11.38-.01-20.89-6.28-26.57-15.22zM480 384c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32z"></path></svg> Peak Speed </h2>
                
                 <div class="clearfix"></div>
               </div>
@@ -381,7 +384,7 @@
           <div class="col-md-8 col-sm-8 col-xs-12">
             <div class="x_panel" style="background-color:black;">
               <div class="x_title">
-                <h2 style='color:white;'><svg width='24px' fontaria-hidden="true" focusable="false" data-prefix="fas" data-icon="gas-pump" class="svg-inline--fa fa-gas-pump fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="rgb(252, 215, 7)" d="M336 448H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h320c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm157.2-340.7l-81-81c-6.2-6.2-16.4-6.2-22.6 0l-11.3 11.3c-6.2 6.2-6.2 16.4 0 22.6L416 97.9V160c0 28.1 20.9 51.3 48 55.2V376c0 13.2-10.8 24-24 24s-24-10.8-24-24v-32c0-48.6-39.4-88-88-88h-8V64c0-35.3-28.7-64-64-64H96C60.7 0 32 28.7 32 64v352h288V304h8c22.1 0 40 17.9 40 40v27.8c0 37.7 27 72 64.5 75.9 43 4.3 79.5-29.5 79.5-71.7V152.6c0-17-6.8-33.3-18.8-45.3zM256 192H96V64h160v128z"></path></svg> Fuel Used <small>On Week Basis</small></h2>
+                <h2 style='color:white;'><svg width='24px' fontaria-hidden="true" focusable="false" data-prefix="fas" data-icon="gas-pump" class="svg-inline--fa fa-gas-pump fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="rgb(252, 215, 7)" d="M336 448H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h320c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm157.2-340.7l-81-81c-6.2-6.2-16.4-6.2-22.6 0l-11.3 11.3c-6.2 6.2-6.2 16.4 0 22.6L416 97.9V160c0 28.1 20.9 51.3 48 55.2V376c0 13.2-10.8 24-24 24s-24-10.8-24-24v-32c0-48.6-39.4-88-88-88h-8V64c0-35.3-28.7-64-64-64H96C60.7 0 32 28.7 32 64v352h288V304h8c22.1 0 40 17.9 40 40v27.8c0 37.7 27 72 64.5 75.9 43 4.3 79.5-29.5 79.5-71.7V152.6c0-17-6.8-33.3-18.8-45.3zM256 192H96V64h160v128z"></path></svg> Estimated Fuel Consumed <small style='color:white;'>{{val}}</small></h2>
                
                 <div class="clearfix"></div>
               </div>

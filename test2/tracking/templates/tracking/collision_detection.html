@@ -149,7 +149,7 @@ marker.bindPopup('<div id="foo"></div>').on('popupopen', function (e) {
 
 } else {
     if (z=='Danger'){
-marker.bindPopup( "<b>Aircraft ID:</b> "+name+" <br><b>Status:\n</b> "+z+" <br><b>Chances:</b> "+prob*100+"% "+"<br><b>Location: </b>Karachi Airport <br><b>Estimated Time:</b> "+ETC ,customOptions).addTo(map);
+marker.bindPopup( "<b>Aircraft ID:</b> "+name+" <br><b>Status:\n</b> "+z+" <br><b>Chances:</b> "+prob*100+"% "+"<br><b>Estimated Time:</b> "+ETC ,customOptions).addTo(map);
     }else {
         marker.bindPopup("<b>Aircraft ID:</b> "+name+" <br><b>Status: </b>Safe ",customOptions).addTo(map);
   
@@ -240,12 +240,12 @@ var tab_data = [{
   columnwidth: [1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000],
   columnorder: [0,1,2,3,4,5,6,7,8,9,10,11],
   header: {
-    values: ['ID','Estimated Collision Time','Latitude','Longitude','Altitude','Angle','Horizontal Separation','Vertical Separation','Horizontal Position','Vertical Position','Probability','Status'],
+    values: ['ID','Estimated Collision Time<i>(hrs)</i>','Latitude','Longitude','Altitude<br><i>(ft)<i>','Angle<br><i>(degree)</i>','Horizontal Separation <i>(km)</i>','Vertical Separation <i>(ft)</i>','Horizontal Position','Vertical Position','Probability','Status'],
     align: "center",
     line: {width: 1, color: 'rgb(50, 50, 50)'},
     fill: {color: ['rgb(235, 100, 230)']},
     font: {family: "Arial", size: 14, color: "white"},
-    align: ["left", "center"],
+    align: ['left', 'right', 'center'],
 	 height: 20,
   },
   cells: {

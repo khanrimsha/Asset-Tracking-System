@@ -22,6 +22,61 @@ vehicle_names={
 }
 car_count=len(vehicle_names['Car'])
 truck_count=len(vehicle_names['Truck'])
+def convert(a):
+   
+    if a == 0:
+        b="12am-1am"
+    elif a == 1:
+
+        b="1am-2am"
+    elif a == 2:
+        b="2am-3am"
+    elif a == 3:
+        b="3am-4am"
+    elif a == 4:
+        b="4am-5am"
+    elif a == 5:
+        b="5am-6am"
+    elif a == 6:
+        b="6am-7am"
+    elif a == 7:
+        b="7am-8am"
+    elif a == 8:
+        b="8am-9am"
+    elif a == 9:
+        b="9am-10am"
+    elif a == 10:
+        b="10am-11am"
+    elif a == 11:
+        b="11am-12am"
+
+    elif a == 12:
+        b="12am-1pm"   
+    elif a == 13:
+        b="1pm-2pm"    
+    elif a == 14:
+        b="2pm-3pm"
+    elif a == 15:
+        b="3pm-4pm"    
+    elif a == 16:
+        b="4pm-5pm"
+    elif a == 17:
+        b="5pm-6pm"
+    elif a == 18:
+        b="6pm-7pm"
+    elif a == 19:
+        b="7pm-8pm"
+    elif a == 20:
+        b="8pm-9pm"
+    elif a == 21:
+        b="9pm-10pm"
+    elif a == 22:
+        b="10pm-11pm"
+    elif a == 23:
+        b="11pm-12am"
+    else:
+        b=None
+    return(b)
 def distance(origin, destination):
     lat1, lon1 = origin
     lat2, lon2 = destination
@@ -49,7 +104,7 @@ def distance_3d(origin, destination,alt1,alt2):
         * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     d = radius * c
-    d=math.sqrt(d**2+(alt2-alt1)**2) #in km
+    d=math.sqrt(d**2+((alt2-alt1)*0.0003048)**2) #in km
     return d
 def col_det(plane_name):
     try:
@@ -369,3 +424,14 @@ def get_data(type_,select,date):
     #file=pd.read_csv('C:/Users/Rimsha khan/Desktop/Extra/test/Power BI/truck_structured_data.csv')
     return (data)
 
+def fetch_insight(type_,name,insight):
+    try:
+        cred = credentials.Certificate(r"C:/Users/Rimsha khan/Desktop/fire-base/assetdata-5e192-firebase-adminsdk-u026s-04925bb72d.json")
+        firebase_admin.initialize_app(cred,{"databaseURL":"https://assetdata-5e192.firebaseio.com/"})
+    except:
+        pass
+    database=db.reference(type_.lower()+"/"+name+"/insights/"+insight+"/")
+    d=database.get()
+    data_json = json.loads(d)
+    my_data=pd.DataFrame(data_json)
+    return my_data

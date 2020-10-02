@@ -4,23 +4,10 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 from django_plotly_dash import DjangoDash
 import pandas as pd
-from firebase import firebase
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import db
 import datetime
-import json
-try:
-    cred = credentials.Certificate(r"C:/Users/Rimsha khan/Desktop/fire-base/assetdata-5e192-firebase-adminsdk-u026s-04925bb72d.json")
-    firebase_admin.initialize_app(cred,{"databaseURL":"https://assetdata-5e192.firebaseio.com/"})
-except:
-    pass
-database=db.reference("car/KC7LZD-9/insights/Fuel_consumed_date/")
-d=database.get()
-data_json = json.loads(d)
-fuel_used=pd.DataFrame(data_json)
-fuel_used["DATE"]=fuel_used["DATE"].apply(lambda x: datetime.datetime.fromtimestamp(x//1000).strftime('%Y-%m-%d'))
-fuel_used['DATE'] = pd.to_datetime(fuel_used.DATE)
+from tracking import functions
+session_val=None
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = DjangoDash('FuelDate', external_stylesheets=external_stylesheets)
@@ -44,18 +31,18 @@ app.layout = html.Div([
    
 ])
 
-def gen_traces(selected_name):
+def gen_traces(selected_name,fuel_used):
     if selected_name=='All':
-        rimsha=fuel_used
+        data=fuel_used
     else:
         month=month_no[options.index(selected_name)-1]
-        rimsha=pd.DataFrame(columns=['DATE','FUEL_USED'])
+        data=pd.DataFrame(columns=['DATE','FUEL_USED'])
         for i in Date:
             date='2020-'+month+'-'+i
-            rimsha=rimsha.append(fuel_used[fuel_used['DATE']==date])
+            data=data.append(fuel_used[fuel_used['DATE']==date])
     traces = {}
-    traces['graph']=[go.Bar(x = rimsha['DATE'],
-                        y = rimsha["FUEL_USED"],
+    traces['graph']=[go.Bar(x = data['DATE'],
+                        y = data["FUEL_USED"],
                         marker_line_color='#FFA200',
                         marker_line_width=1.5,
                         marker_color='#FFA200',
@@ -75,12 +62,19 @@ def gen_traces(selected_name):
         )
     return traces
 
-@app.callback(
+@app.expanded_callback(
             Output('slider-graph', 'figure'),
             [Input('Month', 'value')])
-def display_value(Month):
+def display_value(Month,**kwargs):
+    global session_val
+    session_val=kwargs["session_state"]
+    dev=session_val['dev']
+    type_=session_val['car/truck'].lower()
+    fuel_used=functions.fetch_insight(type_,dev,'Fuel_consumed_date')
+    fuel_used["DATE"]=fuel_used["DATE"].apply(lambda x: datetime.datetime.fromtimestamp(x//1000).strftime('%Y-%m-%d'))
+    fuel_used['DATE'] = pd.to_datetime(fuel_used.DATE)
     
-    data=gen_traces(Month)
+    data=gen_traces(Month,fuel_used)
     return {'data': data['graph'],'layout' :data['layout']}
    
     

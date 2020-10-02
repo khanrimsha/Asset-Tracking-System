@@ -28,7 +28,7 @@ for val in my_data["Rank"].unique():
     df=dictt[val]
 
     fig.add_trace(go.Scattermapbox(lat=df['Lat'], lon=df['Long'],
-mode='markers+lines',hovertext="Rank: ",marker=go.scattermapbox.Marker(
+    mode='markers+lines',hovertext="Rank: ",text =df['Location'],name=val,marker=go.scattermapbox.Marker(
             size=20,
             color=color[val],
             opacity=0.5,
@@ -49,14 +49,14 @@ fig.update_layout(mapbox_style="carto-darkmatter", mapbox_center_lon=180)
 fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}) 
 fig.update_layout(
     
-    showlegend=False,
+    showlegend=True,
     mapbox=dict(
        
         
         center=dict(
             
-            lat=my_data.iloc[0]['Lat'],
-            lon=my_data.iloc[0]['Long'],
+            lat=my_data.iloc[1]['Lat'],
+            lon=my_data.iloc[1]['Long'],
         ),
         #style='light',
         zoom=12,

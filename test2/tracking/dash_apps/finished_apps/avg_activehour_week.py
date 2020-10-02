@@ -4,30 +4,46 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 from django_plotly_dash import DjangoDash
 import pandas as pd
-from firebase import firebase
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import db
-import json
-try:
-    cred = credentials.Certificate(r"C:/Users/Rimsha khan/Desktop/fire-base/assetdata-5e192-firebase-adminsdk-u026s-04925bb72d.json")
-    firebase_admin.initialize_app(cred,{"databaseURL":"https://assetdata-5e192.firebaseio.com/"})
-except:
-    pass
-database=db.reference("car/KC7LZD-9/insights/most_active_time_duration_week/")
-d=database.get()
-data_json = json.loads(d)
-my_data=pd.DataFrame(data_json)
-
+from tracking import functions
+session_val=None
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = DjangoDash('AvgActiveHourWeek', external_stylesheets=external_stylesheets)
-week=my_data['x']
-val=my_data['y']
 
-fig=go.Figure()
-for i in range(0,len(week)):
+app.layout = html.Div([
+    
+    dcc.RadioItems(
+                id="Month",
+               
+                value='Weekly',
+                
+                style={'color':'white'},
+                ),
+                
+    dcc.Graph(id='chart',style={'backgroundColor':'rgb(1,1,1)'}),
+   
+],style={'height':'50%'})
+@app.expanded_callback(
+
+ Output('chart', 'figure'),
+  [Input('Month', 'value')]
+)
+def fun(value,**kwargs):
+    global session_val
+    session_val=kwargs["session_state"]
+    dev=session_val['dev']
+    type_=session_val['car/truck'].lower()
+ 
+    val=[]
+    my_data=functions.fetch_insight(type_,dev,'most_active_time_duration_week')
+    week=my_data['x'].values.tolist()
+    fire_val=my_data['y'].values.tolist()
+    for i in range(0,len(fire_val)):
+        val.append(functions.convert(fire_val[i]))
+
+    fig=go.Figure()
+    for i in range(0,len(week)):
         fig.add_trace(go.Bar(x = [week[i]],
                         y =[val[i]],
                         marker_line_color='#F9D212',
@@ -42,7 +58,7 @@ for i in range(0,len(week)):
                         
                         
         ))
-fig.update_layout(
+    fig.update_layout(
         showlegend=False,
         paper_bgcolor='rgba(0,0,0)',
         plot_bgcolor='rgb(0,0,0)',
@@ -54,17 +70,7 @@ fig.update_layout(
         barmode='overlay',
         
         )
-
-
-
-app.layout = html.Div([
-    
-    
-                
-    dcc.Graph(figure=fig,style={'backgroundColor':'rgb(1,1,1)'}),
-   
-],style={'height':'50%'})
-
+    return fig
 
 
 

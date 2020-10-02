@@ -188,7 +188,7 @@ def creategraph(dff):
             add=add+str(address[i])
         location.append(add)
     
-    values = pd.Series(dff['cluster'] )
+    values = pd.Series(dff['freq'] )
     figure = go.Figure(data=[go.Pie(labels=location, values=values, textinfo='label+percent',
                              insidetextorientation='radial',hole=0.3,domain = {'x': [0, 1], 'y': [0, 1]},
                             )])
