@@ -1,5 +1,9 @@
 {% extends "base_site.html"%}
-
+{%load static %}
+{% load leaflet_tags %}
+{% leaflet_js %}
+{% leaflet_css 'C:/Users/Rimsha khan/Desktop/mycss.css' %}
+{% load static%}
 
 {% block title %} Dashboard 1 {% endblock title %}
 
@@ -9,6 +13,40 @@
 
 {% block content %}
 {% load plotly_dash%}
+<!DOCTYPE html>
+<html>
+    {% load leaflet_tags %}
+    {% load static%}
+    <head>
+        {% leaflet_js %}
+        {% leaflet_css 'C:/Users/Rimsha khan/Desktop/mycss.css' %}
+        <title> Our Home</title>
+        <style type="text/css">
+        #foo {
+    width: 300px;
+    height: 150px;}
+            #map {
+  bottom: 0;
+  left: 0;
+  
+  right: 0;
+  top: 0;
+}
+
+@keyframes fade { 
+  from { opacity: 0.5; } 
+}
+
+.blinking {
+  animation: fade 1s infinite alternate;
+}
+            </style> 
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+        <link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
+      
+        <link rel="stylesheet" href="{% static 'build/css/mycss.css'%}">
+    </head>
+    <body>
   <div class="right_col" role="main" style="background-color:rgb(0, 0, 0);">
     <!-- top tiles -->
     <div class="row tile_count">
@@ -83,7 +121,77 @@
              
               </div>
       </div>
+      <div class="row" style="background-color:black;
+      border-style: solid;
+    border-color: rgb(224, 219, 219)" >
+      <div class="col-md-12 col-sm-12 col-xs-12" style=" border-bottom-style: solid;
   
+      border-bottom-color: rgb(0, 0, 0);
+      border-bottom-width: 0px;">
+      <div class="dashboard_graph" style="background-color:black;">
+  
+            <div class="row x_title">
+              <div class="col-md-6">
+                <h3 style='color:white;'><i class="fa fa-clock-o" style="font-size:24px;color:yellow;"></i> Most Taken Routes <small> {{val}}</small></h3>
+              </div>
+              <div class="col-md-6 ">
+                <h3><i class="fa fa-square-o fa-pull-right" style="font-size:24px;color:yellow;"></i> </h3>
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-4">
+              
+              <div id="myDiv1">
+           
+                <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
+              </div>
+           
+           
+        </div>
+            <div class="col-md-4 col-sm-4 col-xs-4">
+              
+              <div id="myDiv2">
+           
+                <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
+              </div>
+           
+           
+        </div>
+            <div class="col-md-4 col-sm-4 col-xs-4">
+              
+                <div id="myDiv3">
+             
+                  <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
+                </div>
+             
+             
+          </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="background-color:black;border-style: solid;
+      border-color: rgb(224, 219, 219)" >
+        <div class="col-md-12 col-sm-12 col-xs-12" style=" border-top-style: solid;
+    
+        border-top-color: rgb(0, 0, 0);
+        border-top-width: 0px;">
+          <div class="dashboard_graph" style="background-color:black;">
+  
+           
+  
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              
+                <div >
+                  {% leaflet_map "map"  %}
+                 
+                      </div> 
+             
+             
+          </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
     <div class="row" style="background-color:black;border-style: solid;
     border-color: rgb(224, 219, 219)">
       <div class="col-md-12 col-sm-12 col-xs-12 " >
@@ -157,79 +265,8 @@
         </div>
       </div>
     </div>
-    <div class="row" style="background-color:black;border-style: solid;
-    border-color: rgb(224, 219, 219)">
-      <div class="col-md-12 col-sm-12 col-xs-12 " >
-        <div class="dashboard_graph" style="background-color:black;">
-
-          <div class="row x_title">
-            <div class="col-md-6">
-              <h3 style='color:white;'><i class="fa fa-road" style="font-size:24px;color:yellow;"> </i> Most Taken Routes</h3>
-            </div>
-            <div class="col-md-6 ">
-              <h3> </h3>
-            </div>
-          </div>
-
-          <div class="col-md-12 col-sm-12 col-xs-12">
-            
-              <div class="{% plotly_class name='Most_Taken_Route'%} card" style="height:100%;width:100%">
-                {% plotly_app name='Most_Taken_Route' ratio=1 %}
-               
-                    </div> 
-           
-           
-        </div>
-
-         <!---- <div class="col-md-3 col-sm-3 col-xs-3 bg-white">
-            <div class="x_title">
-              <h2>Top Campaign Performance</h2>
-              <div class="clearfix"></div>
-            </div>
-
-            <div class="col-md-12 col-sm-12 col-xs-6">
-              <div>
-                <p>Facebook Campaign</p>
-                <div class="">
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="99"></div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <p>Twitter Campaign</p>
-                <div class="">
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="60"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-6">
-              <div>
-                <p>Conventional Media</p>
-                <div class="">
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="40"></div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <p>Bill boards</p>
-                <div class="">
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="50"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div> -->
-        
-          <div class="clearfix"></div>
-        </div>
-      </div>
-    </div>
+    
+    
 
     <br />
 
@@ -404,32 +441,189 @@
     </div>
   </div>
   
-{% endblock content %}
+</body>
+   
+<script>
+function indicator(val,color,Rank,title){
+var data = [
+ {
+   type: "indicator",
+   mode: "number+gauge",
+   //align:'center',
+   //title:{text:Rank,font:{size:50,color:color}},
+   gauge: { shape: "bullet",axis: {range: [0 ,23],visible: 1,ticks:""},bar:{color:color,thickness:1},borderwidth :1,bordercolor:color},
+  // title:{text:Rank,align:"center",font:{size:28,color:"blue"}},
+   value: val,
+   align:"left", 
+   number:{suffix:" <br>(Times Visited)",align:'right',font:{family:'Times New Roman',size:20,color:color,}},
+   domain: { x: [0, 0.85], y: [0, 0.68] },
+   }];
+   var layout = {
+ margin: {
+               l: 20,
+               r: 10,
+               b: 30,
+               t: 70,
+           },
+ paper_bgcolor: "rgb(0,0,0)",
+color:'black',
+height:150,
 
-{% block javascripts %}
-  {{ block.super}}
-  <!-- Chart.js -->
-  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
-  <!-- gauge.js -->
-  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
-  <!-- Skycons -->
-  <script src="/static/vendors/skycons/skycons.js"></script>
-  <!-- Flot -->
-  <script src="/static/vendors/Flot/jquery.flot.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
-  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
-  <!-- Flot plugins -->
-  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
-  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
-  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
-  <!-- DateJS -->
-  <script src="/static/vendors/DateJS/build/date.js"></script>
-  <!-- JQVMap -->
-  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
-  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
-{% endblock javascripts %}
+ title: {'align':'left','text':"<b>"+title+"</b>",'font': {'color':'white'}},
+ font: {color:'black'}//hiding ticks
+}
 
+ return [data,layout];};
+
+Plotly.newPlot('myDiv1', indicator(14,'#FF1493',"A","Mostly Taken Route")[0], indicator(14,'#FF1493',"A","Mostly Taken Route")[1]);
+Plotly.newPlot('myDiv2', indicator(5,"#aa12cc","B","Second Most Taken Route")[0], indicator(14,'#aa12cc',"A","Second Most Taken Route")[1]);
+Plotly.newPlot('myDiv3', indicator(12,"#0fe3f2","C","Third Most Taken Route")[0], indicator(14,'#0fe3f2',"A","Third Most Taken Route")[1]);
+ var tip_marker={{tip_marker |safe}}; 
+ var lines={{lines|safe}}; 
+  
+ var rank1={{rank1 |safe}}; 
+ var rank2={{rank2 |safe}}; 
+ var rank3={{rank3 |safe}}; 
+ var center=[rank2[0][1],rank2[0][2]];
+ var map = L.map('map').setView(center, 14);
+
+   L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+     attribution: '© OpenStreetMap contributors, © CartoDB',
+     maxZoom: 18}).addTo(map);  
+                                
+L.Icon.Default.imagePath = 'D:/django/test2/leaflet/';
+var marks=[]; //storing marker objects
+var polylines=[];
+var customOptions =
+   {
+   'maxWidth': '400',
+   'width': '200',
+   
+   'className' : 'popupCustom'
+   }
+const markerIcon = L.icon({
+ iconSize: [25, 41],
+ iconAnchor: [10, 41],
+ popupAnchor: [2, -40],
+ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+ shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+ 
+ // specify the path here
+
+});
+
+function Line(latlong,rank,color){
+polyline = new L.polyline(latlong, {color: color}).addTo(map);
+if (rank=="A"){
+  var msg="Most Taken Route";
+}
+if (rank=="B"){
+   var msg="Second Most Taken Route";
+}
+if (rank=="C"){
+   var msg="Third Most Taken Route";
+}
+polyline.myCustomID ="Rank: "+ rank +"<br>"+msg;
+
+polylines.push(polyline);
+}
+function create_marker(x,y,color,location){
+var marker1= new L.circleMarker([x,y], {
+ 
+radius:15,
+color: color,
+fillColor: color,
+fillOpacity: 0.5,
+}).addTo(map)
+var marker2= new L.circleMarker([x,y], {
+radius:4,
+color:color,
+fillColor: color,
+fillOpacity: 1,
+}).addTo(map)
+marker1.myCustomID = location;
+marker2.myCustomID=location;
+//marker1.bindPopup(location,customOptions).addTo(map);
+//marker2.bindPopup(location,customOptions).addTo(map);
+
+//var marker3 = new L.Marker([x,y],{icon:markerIcon}).addTo(map);
+marks.push(marker1);
+marks.push(marker2);
+}
+function create_tip(x,y,location,color){
+   if (color=='#FF1493'){
+       var co="red";
+   }
+   if (color=='#aa12cc'){
+       var co="violet";
+   }
+   if (color=='#0fe3f2'){
+       var co="blue";
+   }
+
+   
+   var marker3 = new L.Marker([x,y],{icon:L.icon({
+ iconSize: [25, 41],
+ iconAnchor: [10, 41],
+ popupAnchor: [2, -40],
+ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+co+'.png',
+ shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+ 
+ // specify the path here
+
+})}).addTo(map);
+}
+for (var i=0;i<lines.length;i++) //creating markers
+{
+   Line(lines[i][0],lines[i][1][0],lines[i][2]);
+
+}
+function mark(rank){
+   for (var i=0;i<rank.length;i++) //creating markers
+{ 
+   create_marker(rank[i][1],rank[i][2],rank[i][3],rank[i][4]);
+}
+}
+if (rank1 != "None"){
+   mark(rank1);
+}
+if (rank2 != "None"){
+   mark(rank2);
+}
+if (rank3 != "None"){
+   mark(rank3);
+}
+
+for (var i=0;i<tip_marker.length;i++) //creating markers
+{ 
+create_tip(tip_marker[i][0],tip_marker[i][1],tip_marker[i][2],tip_marker[i][3]);
+}
+
+
+function onMapHover(e) {
+   var popup = L.popup(customOptions)
+  .setLatLng(e.latlng) 
+  .setContent(e.target.myCustomID)
+  .openOn(map);
+
+//longitude
+}
+//function MapClick(e) {
+//   var points = layer.options.customData.points;
+  //    alert("hi");
+//}
+L.Icon.Default.prototype._getIconUrl()
+//for (var i=0; i<marks.length;i++){
+//marks[i].on('click', MapClick);
+//}
+for (var i=0; i<marks.length;i++){
+marks[i].on('mouseover', onMapHover);
+}
+for (var i=0; i<marks.length;i++){
+polylines[i].on('mouseover', onMapHover);
+}
+
+//Plotly.newPlot('myDiv', data, layout);
+</script>
+</html>{% endblock%}
     

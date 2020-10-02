@@ -1,3 +1,10 @@
+{% extends "base_site.html" %}
+{%load static %}
+{% load leaflet_tags %}
+{% leaflet_js %}
+{% leaflet_css 'C:/Users/Rimsha khan/Desktop/mycss.css' %}
+    {% load static%}
+    {% block content %}
 <!DOCTYPE html>
 <html>
     {% load leaflet_tags %}
@@ -26,46 +33,87 @@
   animation: fade 1s infinite alternate;
 }
             </style> 
-                   <link rel="stylesheet" href="{% static 'build/css/mycss.css'%}">
-                   <script src="{% static 'build/leaflet.rotatedMarker.js'%}"></script>
-               <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-               <link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
         <link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
       
         <link rel="stylesheet" href="{% static 'build/css/mycss.css'%}">
     </head>
     <body>
-        <h3> Allah is Great</h3>
-        <br> <div id="myDiv">
-          <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
-        </div>
-      
+      <div class="right_col" role="main" style="background-color:rgb(0, 0, 0);">
+        <div class="row" style="background-color:black;height:100px;">
+          <div class="col-md-12 col-sm-12 col-xs-12 " style="background-color:black;">
+            
+              <div class="col-md-4 col-sm-4 col-xs-4" style="height:100px;">
+          
+              <div id="myDiv1">
+             
+              <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
+            </div></div>
+            <div class="col-md-4 col-sm-4 col-xs-4">
+          
+              <div id="myDiv2">
+             
+              <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
+            </div></div>
+            <div class="col-md-4 col-sm-4 col-xs-4">
+          
+              <div id="myDiv3">
+             
+              <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
+            </div></div>
+          
+          </div>
+          </div>
+          <div class="row" style="background-color:black;height:100px;margin-bottom: 10px;">
+        
+          <div class="col-md-12 col-sm-12 col-xs-12 " >
+          
+          <div {style="height:500px;"}>
+            {% leaflet_map "map"  %}</div></div>
+       
+           </div>
+            <h3> Allah is Great</h3>
+             </div>
+     
+        
    
     </body>
    
  <script>
-   var data = [
+function indicator(val,color,Rank,title){
+ var data = [
   {
     type: "indicator",
-    mode: "number+gauge+delta",
-    gauge: { shape: "bullet" },
-    delta: { reference: 300 },
-    value: 220,
-    domain: { x: [0, 1], y: [0, 1] },
-    title: { text: "Profit" }
-  }
-];
+    mode: "number+gauge",
+    //align:'center',
+    //title:{text:Rank,font:{size:50,color:color}},
+    gauge: { shape: "bullet",axis: {range: [0 ,23],visible: 1,ticks:""},bar:{color:color,thickness:1},borderwidth :1,bordercolor:color},
+   // title:{text:Rank,align:"center",font:{size:28,color:"blue"}},
+    value: val,
+    align:"left", 
+    number:{suffix:" <br>(Times Visited)",align:'right',font:{family:'Times New Roman',size:20,color:color,}},
+    domain: { x: [0, 0.85], y: [0, 0.68] },
+    }];
+    var layout = {
+  margin: {
+                l: 20,
+                r: 10,
+                b: 30,
+                t: 70,
+            },
+  paper_bgcolor: "rgb(0,0,0)",
+ color:'black',
+ height:150,
 
-
-var layout = {
-  paper_bgcolor: "rgba(0,0,0,0)",
- color:'white',
-  'title': {'text':"<b>Aircraft "+ name+" Collision Detection</b>",'font-color':'white'},
-  font: {size: 18,color:'white'}
+  title: {'align':'left','text':"<b>"+title+"</b>",'font': {'color':'white'}},
+  font: {color:'black'}//hiding ticks
 }
 
-Plotly.newPlot('myDiv', data, layout);
+  return [data,layout];};
+
+Plotly.newPlot('myDiv1', indicator(14,'#FF1493',"A","Mostly Taken Route")[0], indicator(14,'#FF1493',"A","Mostly Taken Route")[1]);
+Plotly.newPlot('myDiv2', indicator(5,"#aa12cc","B","Second Most Taken Route")[0], indicator(14,'#aa12cc',"A","Second Most Taken Route")[1]);
+Plotly.newPlot('myDiv3', indicator(12,"#0fe3f2","C","Third Most Taken Route")[0], indicator(14,'#0fe3f2',"A","Third Most Taken Route")[1]);
   var tip_marker={{tip_marker |safe}}; 
   var lines={{lines|safe}}; 
    
@@ -211,7 +259,6 @@ for (var i=0; i<marks.length;i++){
 polylines[i].on('mouseover', onMapHover);
 }
 
-
 //Plotly.newPlot('myDiv', data, layout);
 </script>
-</html>
+</html>{% endblock%}
