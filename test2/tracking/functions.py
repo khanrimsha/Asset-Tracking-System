@@ -435,3 +435,4 @@ def fetch_insight(type_,name,insight):
     data_json = json.loads(d)
     my_data=pd.DataFrame(data_json)
     return my_data
+

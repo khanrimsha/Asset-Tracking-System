@@ -9,7 +9,7 @@ path('tracking/insights/',views.insights,name='insights'),
 path('tracking/collision_detection/',views.collision_detection,name='collision_detection'),
 path('tracking/vehicle_history/',views.veh_hist,name='vehicle_history'), 
 path('',views.login,name="login"),
-path('route_test/',views.route_test,name="route_test"),
+
 
 path('logout/',views.logout,name="logout"),
 ]

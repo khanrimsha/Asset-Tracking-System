@@ -444,18 +444,24 @@
 </body>
    
 <script>
-function indicator(val,color,Rank,title){
+//var gauge=[];//for click fit bounds
+
+var indicators={{indicator |safe}}; 
+var divs=['myDiv1','myDiv2','myDiv3'];
+var colors=["#FF1493",'#aa12cc','#0fe3f2'];
+var msg=["Mostly Taken Route" ,"Second Most Taken Route","Third Most Taken Route"];
+function indicator(val,color,Rank,title,limit){
 var data = [
  {
    type: "indicator",
    mode: "number+gauge",
    //align:'center',
    //title:{text:Rank,font:{size:50,color:color}},
-   gauge: { shape: "bullet",axis: {range: [0 ,23],visible: 1,ticks:""},bar:{color:color,thickness:1},borderwidth :1,bordercolor:color},
+   gauge: { shape: "bullet",axis: {range: [0 ,limit],visible: 1,ticks:""},bar:{color:color,thickness:1},borderwidth :1,bordercolor:color},
   // title:{text:Rank,align:"center",font:{size:28,color:"blue"}},
    value: val,
    align:"left", 
-   number:{suffix:" <br>(Times Visited)",align:'right',font:{family:'Times New Roman',size:20,color:color,}},
+   number:{suffix:" Times ",align:'right',font:{family:'Times New Roman',size:20,color:color,}},
    domain: { x: [0, 0.85], y: [0, 0.68] },
    }];
    var layout = {
@@ -475,16 +481,27 @@ height:150,
 
  return [data,layout];};
 
-Plotly.newPlot('myDiv1', indicator(14,'#FF1493',"A","Mostly Taken Route")[0], indicator(14,'#FF1493',"A","Mostly Taken Route")[1]);
-Plotly.newPlot('myDiv2', indicator(5,"#aa12cc","B","Second Most Taken Route")[0], indicator(14,'#aa12cc',"A","Second Most Taken Route")[1]);
-Plotly.newPlot('myDiv3', indicator(12,"#0fe3f2","C","Third Most Taken Route")[0], indicator(14,'#0fe3f2',"A","Third Most Taken Route")[1]);
+for (var i=0;i<indicators.length;i++){
+ Plotly.newPlot(divs[i], indicator(indicators[i][0],colors[i],indicators[i][1],msg[i],indicators[i][2])[0], indicator(indicators[i][1],colors[i],indicators[i][0],msg[i],indicators[i][2])[1]);
+ 
+//gauge.push(a);
+}
+
+
+
+
+
+//for (var i=0; i<divs.length;i++){
+//divs[i].on('click', GaugeClick);
+//}
  var tip_marker={{tip_marker |safe}}; 
  var lines={{lines|safe}}; 
   
  var rank1={{rank1 |safe}}; 
  var rank2={{rank2 |safe}}; 
  var rank3={{rank3 |safe}}; 
- var center=[rank2[0][1],rank2[0][2]];
+ var center=[rank1[0][1],rank1[0][2]];
+ //alert("1"+rank1+"2"+rank2+"3"+rank3)
  var map = L.map('map').setView(center, 14);
 
    L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
@@ -590,7 +607,7 @@ if (rank1 != "None"){
 if (rank2 != "None"){
    mark(rank2);
 }
-if (rank3 != "None"){
+if (rank3 != 0){
    mark(rank3);
 }
 

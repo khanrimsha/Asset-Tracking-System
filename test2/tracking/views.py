@@ -170,17 +170,22 @@ def insights(request):
                 request.session['django_plotly_dash']['dev']=request.session['truck_name']
                 display='Car'
             
-                    
-            my_data=pd.read_csv(r"D:\Web Downloads\mostly_taken_route.csv")
+            name=request.session['django_plotly_dash']['dev']
+            type_=request.session['django_plotly_dash']['car/truck']
+            my_data=functions.fetch_insight(type_,name,"mostly_taken_route")
+            #my_data=pd.read_csv(r"D:\Web Downloads\mostly_taken_route.csv")
             ranks=my_data["Rank"].unique()
             color={"A":"#FF1493",
             "B":'#aa12cc',
             "C":'#0fe3f2'
             }
             dictt={}
+            max_limit=my_data['freq'].max()
+            indicator=[]
             for i in ranks:
                 dictt[i]=my_data[my_data["Rank"]==i]
                 dictt[i]['color']=color[i]
+                indicator.append([my_data[my_data["Rank"]==i].iloc[0]['freq'],i,max_limit])
             tip_marker=[]
             for val in dictt:
                 i=dictt[val].iloc[0]['color']
@@ -199,20 +204,30 @@ def insights(request):
                 c=color[val]
                 lines.append([a,b,c])
             rankA=dictt["A"]
-            rankB=dictt["B"]
-            rankC=dictt["C"] 
-            rank1=rankA.loc[:,['Rank','Lat','Long','color','Location','freq']].values.tolist()   #for val in my_data["Rank"].unique():
-            rank2=rankB.loc[:,['Rank','Lat','Long','color','Location','freq']].values.tolist() 
-            rank3=rankC.loc[:,['Rank','Lat','Long','color','Location','freq']].values.tolist() 
-            #   df=dictt[val]
-        
-            data=pd.read_csv('C:/Users/Rimsha khan/Desktop/most_taken_route.csv')
-            leaflet_data=data.loc[:,['lat','long','status','device']].values.tolist()#fetching coordinates
-            center=[42.986999999999995,-81.215]
-            
-           
-            
-            context = {'lines':lines,'rank1':rank1,'rank2':rank2,'rank3':rank3,'data':leaflet_data,'center':center,'tip_marker':tip_marker,'mymap': m2,'drop':drop,'val':results,'car_count':car_count,'truck_count':truck_count,'plane_count':plane_count,'vehicle_count':vehicle_count,'display':display}
+            try:
+                rankB=dictt["B"]
+            except:
+                rankB="None"
+            try:
+                rankC=dictt["C"] 
+            except:
+                rankC="None"
+            try:
+                rank1=rankA.loc[:,['Rank','Lat','Long','color','Location','freq']].values.tolist()   #for val in my_data["Rank"].unique():
+            except:
+                rank1=0
+            try:
+                rank2=rankB.loc[:,['Rank','Lat','Long','color','Location','freq']].values.tolist() 
+            except:
+                rank2=0
+            try:
+                rank3=rankC.loc[:,['Rank','Lat','Long','color','Location','freq']].values.tolist() 
+            except:
+                rank3=0
+
+ 
+          
+            context = {'indicator':indicator,'lines':lines,'rank1':rank1,'rank2':rank2,'rank3':rank3,'tip_marker':tip_marker,'mymap': m2,'drop':drop,'val':results,'car_count':car_count,'truck_count':truck_count,'plane_count':plane_count,'vehicle_count':vehicle_count,'display':display}
             
             return render(request,'tracking/insights.html',context)
         else:
@@ -249,46 +264,3 @@ def collision_detection(request):
     else:
         
         return redirect('/')
-def route_test(request):
-    my_data=pd.read_csv(r"D:\Web Downloads\mostly_taken_route.csv")
-    ranks=my_data["Rank"].unique()
-    color={"A":"#FF1493",
-    "B":'#aa12cc',
-    "C":'#0fe3f2'
-    }
-    dictt={}
-    for i in ranks:
-        dictt[i]=my_data[my_data["Rank"]==i]
-        dictt[i]['color']=color[i]
-    tip_marker=[]
-    for val in dictt:
-        i=dictt[val].iloc[0]['color']
-        a=dictt[val]['Lat'].head(1).values.tolist()[0]
-        b=dictt[val]['Long'].head(1).values.tolist()[0]
-        c=dictt[val]['Location'].head(1).values.tolist()[0]
-        tip_marker.append([a,b,c,i])
-        d=dictt[val]['Lat'].tail(1).values.tolist()[0]
-        e=dictt[val]['Long'].tail(1).values.tolist()[0]
-        f=dictt[val]['Location'].tail(1).values.tolist()[0]
-        tip_marker.append([d,e,f,i])
-    lines=[]
-    for val in dictt:
-        a=dictt[val].loc[:,['Lat','Long']].values.tolist()
-        b=dictt[val].loc[:,['Rank']].values.tolist()[0]
-        c=color[val]
-        lines.append([a,b,c])
-    rankA=dictt["A"]
-    rankB=dictt["B"]
-    rankC=dictt["C"] 
-    rank1=rankA.loc[:,['Rank','Lat','Long','color','Location','freq']].values.tolist()   #for val in my_data["Rank"].unique():
-    rank2=rankB.loc[:,['Rank','Lat','Long','color','Location','freq']].values.tolist() 
-    rank3=rankC.loc[:,['Rank','Lat','Long','color','Location','freq']].values.tolist() 
-     #   df=dictt[val]
-  
-    data=pd.read_csv('C:/Users/Rimsha khan/Desktop/most_taken_route.csv')
-    leaflet_data=data.loc[:,['lat','long','status','device']].values.tolist()#fetching coordinates
-    center=[42.986999999999995,-81.215]
-    
-    context = {'lines':lines,'rank1':rank1,'rank2':rank2,'rank3':rank3,'data':leaflet_data,'center':center,'tip_marker':tip_marker}
-    
-    return render(request,'tracking/route_test.html',context)
