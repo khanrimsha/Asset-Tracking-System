@@ -21,7 +21,9 @@ def login(request):
             session = request.session
             request.session['username'] = username
             request.session['pass'] = password
+           
             request.session['car_name']="KC7LZD-9"
+            request.session['plane']=7668253
             request.session['truck_name']="KE4KMD-14"
             request.session['car/truck']='Car'
             request.session['live_track']='False'
@@ -40,6 +42,7 @@ def logout(request):
         del request.session['car/truck']
         del request.session['username']
         del request.session['pass']
+        del request.session['plane']
         del request.session['car_name']
         del request.session['truck_name']
         del request.session['live_track']
@@ -156,7 +159,7 @@ def insights(request):
             if request.method=="POST":
                
                 results=request.POST['cars'] #name of select
-              
+               
                 
                 if car_truck=='Car':
                     request.session['car_name']=results
@@ -226,7 +229,7 @@ def insights(request):
                 rank3=0
 
  
-          
+            results=request.session['django_plotly_dash']['dev']
             context = {'indicator':indicator,'lines':lines,'rank1':rank1,'rank2':rank2,'rank3':rank3,'tip_marker':tip_marker,'mymap': m2,'drop':drop,'val':results,'car_count':car_count,'truck_count':truck_count,'plane_count':plane_count,'vehicle_count':vehicle_count,'display':display}
             
             return render(request,'tracking/insights.html',context)
@@ -239,11 +242,15 @@ def insights(request):
 def collision_detection(request):
     if request.session.has_key('username') and request.session.has_key('pass'):
         if request.session['username']==username1 and request.session['pass']==password1 :
-            results='No Select'
-            plane_name=10661606
+           
+        
             if request.method=="POST":
-                results=request.POST['plane'] #name of select
-                plane_name=results
+                results=request.POST['plane']
+                request.session['plane']=results
+                 #name of select
+               
+            plane_name=request.session['plane']
+            results=plane_name
             fetched_data=functions.col_det(int(plane_name))
             data=fetched_data['data']
             leaflet_data=data.loc[:,['Latitude','Longitude','Status','Id','Probability','ETC','Altitude', 'Speed', 'Angle',

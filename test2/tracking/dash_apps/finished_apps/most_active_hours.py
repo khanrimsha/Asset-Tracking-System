@@ -38,7 +38,7 @@ def display_value(value,**kwargs):
     
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=y, y=my_data['Activation_count'],hovertemplate =
-    '<b>Frequency</b>: %{y}'+
+    '<b>Time:</b> %{x}'+'<br><b>Frequency:</b> %{y}'+
         "<extra></extra>"
     
     , fill='tozeroy',marker_color='#FF99FF')) 

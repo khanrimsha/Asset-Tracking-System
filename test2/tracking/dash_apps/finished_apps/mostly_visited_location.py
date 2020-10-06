@@ -144,13 +144,29 @@ def creategraph(dff):
     
             add=add+str(address[i])
         location.append(add)
+    text=dff['location']
+    text = text.str.wrap(30)
+    text = text.apply(lambda x: x.replace('\n', '<br>'))
+    pie_colors=["blue",'#49fc03','#fff700','#fc088e',
+          '#a308fc','#fffea8'
+        '#0589fc','#ff5900']
     
     values = pd.Series(dff['freq_x'] )
-    figure = go.Figure(data=[go.Pie(labels=location, values=values, textinfo='label+percent',
+    figure = go.Figure(data=[go.Pie(labels=location, values=values,
                              insidetextorientation='radial',hole=0.3,domain = {'x': [0, 1], 'y': [0, 1]},
-                            )])
+                            marker_colors=pie_colors,textposition="inside",
+                            textfont = {'family': "Times", 'size': 14, #'color': "white"
+                            },
+           hovertemplate="<b>Location:</b> "+text+"<br>Frequency: "+'value+percent'+"<extra></extra>",
+                  )])
     figure.update_layout(#title_text='<b>Mostly Visited Location</b>',
     autosize=False,
+    showlegend=False,
+  
+     hoverlabel=dict(bordercolor='darkblue',align="left",
+        bgcolor="blue",font=dict(family="Times New Roman",size=16,color="white")
+     
+    ),
     paper_bgcolor='rgba(0,0,0)',
     height = 500,
     width = 400,
@@ -164,16 +180,19 @@ def createmap(dff,my):
         #i=dff.iloc[0]['lat_center']
         #j=dff.iloc[0]['long_center']
     dff['symbol']='circle'
+    text=dff['location']
+    text = text.str.wrap(30)
+    text = text.apply(lambda x: x.replace('\n', '<br>'))
     fig=go.Figure(go.Scattermapbox(
         lat = dff.lat_center,
         lon = dff.long_center,
         
         customdata=dff['cluster'],
         mode = 'markers',
-        text=dff['location'],
+        text=text,
         marker=dict(size=dff['size'],
         sizemode= 'area',
-        colorscale=[[0, 'rgb(200,0,0)'], [1, 'rgb(0,200,0)']],
+        colorscale=[[0, '#f50fc7'], [1, '#7d62d9']],
         
         showscale=True, # show color scale False for hiding
                     color= dff.freq_y,
@@ -225,15 +244,19 @@ app.layout = html.Div([
     
     style_cell={'textAlign': 'left','whiteSpace': 'normal',
         'height': 'auto',},
-    style_cell_conditional=[
-        {
-            
-            'textAlign': 'left',
-            'backgroundColor': 'rgb(0,0,0)',
-        'color': 'white','border': '1px solid grey' 
-        }],
-    style_as_list_view=True,
-    style_header={'backgroundColor': '#8B1717','color': 'white','fontWeight': 'bold'},
+    style_cell_conditional=[  {
+            'if': {'row_index': 'odd'},
+            'backgroundColor': '#A4CAFA',
+            'color':'black','border': '1px solid blue' 
+        },{
+            'if': {'row_index': 'even'},
+            'backgroundColor': '#60A3F6',
+            'color':'black','border': '1px solid blue' 
+        }
+        ],
+        
+    #style_as_list_view=True,
+    style_header={'backgroundColor': '#457CBE','color': 'white','fontWeight': 'bold'},
     
 )
         ])
@@ -241,9 +264,11 @@ app.layout = html.Div([
     style={'width': '40%', 'display': 'inline-block','backgroundColor': 'rgb(0, 0, 0)'})],
     #exception
     style={
-        'borderBottom': 'thin lightgrey solid',
+      # 'borderBottom': 'thin lightgrey solid',
         'backgroundColor': 'rgb(0, 0, 0)',
-        'padding': '10px 5px'}
+        'padding': '0px 5px','margin':{
+            "r":0,"t":0,"l":0,"b":0
+        }}
         )
         
         ])

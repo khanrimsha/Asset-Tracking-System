@@ -12,7 +12,7 @@ import datetime
 session_val=None
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-plane_var='rim'
+
 
 app = DjangoDash('AvgActiveHourDate',
 #add_bootstrap_links=True,
@@ -30,7 +30,7 @@ app.layout = html.Div([
                     'label': i,
                     'value': i
                 } for i in options],
-                value='January',
+                value='May',
                 ),
                 
     dcc.Graph(id='slider-graph',style={'backgroundColor':'rgb(1,1,1)'}),

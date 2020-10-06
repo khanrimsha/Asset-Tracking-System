@@ -48,10 +48,10 @@ def convert(a):
     elif a == 10:
         b="10am-11am"
     elif a == 11:
-        b="11am-12am"
+        b="11am-12pm"
 
     elif a == 12:
-        b="12am-1pm"   
+        b="12pm-1pm"   
     elif a == 13:
         b="1pm-2pm"    
     elif a == 14:
@@ -432,7 +432,11 @@ def fetch_insight(type_,name,insight):
         pass
     database=db.reference(type_.lower()+"/"+name+"/insights/"+insight+"/")
     d=database.get()
-    data_json = json.loads(d)
-    my_data=pd.DataFrame(data_json)
-    return my_data
+    if insight=='peak_speed':
+        speed=d["speed_max"]
+        return (speed)
+    else:
+        data_json = json.loads(d)
+        my_data=pd.DataFrame(data_json)
+        return my_data
 

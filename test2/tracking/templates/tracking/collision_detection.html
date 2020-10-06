@@ -2,7 +2,7 @@
 {%load static %}
 {% load leaflet_tags %}
 {% leaflet_js %}
-{% leaflet_css 'C:/Users/Rimsha khan/Desktop/mycss.css' %}
+{% leaflet_css  %}
     {% load static%}
     {% block content %}
 <!DOCTYPE html>
@@ -20,9 +20,8 @@
             <link rel="stylesheet" href="{% static 'build/css/mycss.css'%}">
             <script src="{% static 'build/leaflet.rotatedMarker.js'%}"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-        <link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
-      
         
+      
     </head>
     <body>
         
@@ -66,6 +65,16 @@
                     <div style="background-color: black;" >
                         {% leaflet_map "map"  %} 
                     </div>
+                    
+                
+               
+               <div class="clearfix"></div>
+                
+            
+            </div>
+            <div class="row" style="background-color:black;border-style: solid;
+            border-color: rgb(224, 219, 219)" >
+            
                     <div id="myDiv" style="background-color: black;">
                         <script type="application/javascript" src="//cdn.plot.ly/plotly-latest.min.js"></script>
                       </div>
@@ -75,7 +84,6 @@
                 
             
             </div>
-          
    </div>
     </body>
    
@@ -86,23 +94,23 @@
   var device={{device |safe}};
   var data={{data|safe}};
   
-  var map = L.map('map').setView(center, 11);
-  var danger_data={{danger_data|safe}};
-  
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+var map = L.map('map').setView(center, 11);
+var danger_data={{danger_data|safe}};
+
+var basemap= L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">Collision Detection</a> contributors',
       maxZoom: 18}).addTo(map);  
-            
-      var circle = L.circle(center,18200, {color: '#FC5044',
+  
+var circle = L.circle(center,18200, {color: '#FC5044',
                     fillColor: '#FC5044',
                     fillOpacity: 0.5,
                     }).addTo(map); 
-    var circle = L.circle(center, 12000, {color: '#FC3426',
+var circle = L.circle(center, 12000, {color: '#FC3426',
                     fillColor: '#FC3426',
                     fillOpacity: 0.5,
                     }).addTo(map); 
   
-    var circle = L.circle(center, 6000, {color: '#FF1F0F',
+var circle = L.circle(center, 6000, {color: '#FF1F0F',
                                                     fillColor: '#FF1F0F',
                                                     fillOpacity: 0.5,
                                                     }).addTo(map); 
@@ -116,19 +124,26 @@ var customOptions =
     
     'className' : 'popupCustom'
     }
+     
 function create_marker(x,y,z,name,prob,ETC,class_,angle,i){
 
-var marker= new L.marker([x,y], {rotationAngle: angle,
+var marker= new L.marker([x,y], {
 
+rotationAngle: angle+270,
 icon: L.icon({
 iconUrl: 'https://svgsilh.com/svg/295396.svg',
 iconSize: [30, 30],
-rotationOrigin:'center center',
+iconAnchor: [8, 13],
+rotationOrigin:'left center',
 color: "rgb(0,0,100)",
 className: class_,
 })})
-if (x==center[0] && y==center[1])  {
-marker.bindPopup('<div id="foo"></div>').on('popupopen', function (e) {
+if (x==center[0] && y==center[1]) {
+if (probab==0) {
+  marker.bindPopup("<b>Aircraft ID:</b> "+name+" <br><b>Status: </b>Safe ",customOptions).addTo(map);
+
+}else{
+  marker.bindPopup('<div id="foo"></div>').on('popupopen', function (e) {
         Plotly.newPlot('foo', [{
           values: probab,
   labels: device,
@@ -147,7 +162,8 @@ marker.bindPopup('<div id="foo"></div>').on('popupopen', function (e) {
         });
     }).addTo(map);
 
-} else {
+}}
+ else {
     if (z=='Danger'){
 marker.bindPopup( "<b>Aircraft ID:</b> "+name+" <br><b>Status:\n</b> "+z+" <br><b>Chances:</b> "+prob*100+"% "+"<br><b>Estimated Time:</b> "+ETC ,customOptions).addTo(map);
     }else {
@@ -186,6 +202,7 @@ table_data9.push(data[i][12]);
 table_data10.push(precise(data[i][4]));
 table_data11.push(data[i][2]);
 }}
+var plane_name="";
 var i='ff0000';
 var table_data=[table_data0,table_data1,table_data2,table_data3,table_data4,table_data5,table_data6,table_data7,table_data8,table_data9,table_data10,table_data11];
 for (var i=0;i<data.length;i++) //creating markers
@@ -193,8 +210,9 @@ for (var i=0;i<data.length;i++) //creating markers
 if (data[i][2]=='Danger'){
   
 create_marker(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],'blinking',i);
-}else{
+}else{if (data[i][0]==center[0] && data[i][1]==center[1]){plane_name= data[i][3]}
   create_marker(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],null,data[i][8],i);
+
 } }
 var polyArray=[];
 function onMapHover(e) {
@@ -243,7 +261,7 @@ var tab_data = [{
     values: ['ID','Estimated Collision Time<i>(hrs)</i>','Latitude','Longitude','Altitude<br><i>(ft)<i>','Angle<br><i>(degree)</i>','Horizontal Separation <i>(km)</i>','Vertical Separation <i>(ft)</i>','Horizontal Position','Vertical Position','Probability','Status'],
     align: "center",
     line: {width: 1, color: 'rgb(50, 50, 50)'},
-    fill: {color: ['rgb(235, 100, 230)']},
+    fill: {color: ['#91219E']},
     font: {family: "Arial", size: 14, color: "white"},
     align: ['left', 'right', 'center'],
 	 height: 20,
@@ -251,17 +269,18 @@ var tab_data = [{
   cells: {
     values: table_data,
     align: ["left", "center"],
-	 height: 30,
+	 //height: 30,
     line: {color: "black", width: 1},
-    fill: {color: ['rgb(235, 193, 238)','rgba(228, 222, 249, 0.65)', 'rgba(228, 222, 249, 0.65)','rgba(228, 222, 249, 0.65)','rgba(228, 222, 249, 0.65)']},
+    fill: {color: ['#E199EA','#DDB7DF']},
     font: {family: "Arial", size: 13, color: ["black"]}
   }
 }]
 
 var layout = {
   paper_bgcolor: "rgba(0,0,0,0)",
+  height:'auto',
  color:'white',
-  'title': {'text':"<b>Aircraft "+ name+" Collision Detection</b>",'font-color':'white'},
+  'title': {'text':"<b>Aircraft "+plane_name+" Collision Detection</b>",'font-color':'white'},
   font: {size: 18,color:'white'}
 }
 

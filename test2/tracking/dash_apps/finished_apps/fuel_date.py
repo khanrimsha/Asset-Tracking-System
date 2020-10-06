@@ -24,7 +24,7 @@ app.layout = html.Div([
                     'label': i,
                     'value': i
                 } for i in options],
-                value='January',
+                value='May',
                 ),
                 
     dcc.Graph(id='slider-graph',style={'backgroundColor':'rgb(1,1,1)'}),
@@ -55,7 +55,7 @@ def gen_traces(selected_name,fuel_used):
         plot_bgcolor='rgb(0,0,0)',
         xaxis={'autorange':True,'title':'Date'},
         
-        yaxis = dict(range=[0,5],title='Fuel Consumed(in litres)'),
+        yaxis = dict(range=[0,data["FUEL_USED"].max()],title='Fuel Consumed(in litres)'),
         #title="Daily Fuel Consumed",
         font=dict(color='white'),
            

@@ -5,7 +5,7 @@
   <head>
    
 		{% leaflet_js %}
-	{% leaflet_css 'C:/Users/Rimsha khan/Desktop/mycss.css' %}
+
     {% block head %}
       {% block meta %}
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18,9 +18,6 @@
       <title>Dashboard | {% block title %}{% endblock %}</title>
 
       {% block stylesheets %}
-      <!-- Leaflet -->
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-	<link rel="stylesheet" href="{% static 'website/css/leaflet.css' %}" />
   
         <!-- Bootstrap -->
         <link href="/static/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">

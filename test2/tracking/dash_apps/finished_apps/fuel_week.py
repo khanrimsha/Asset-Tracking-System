@@ -13,10 +13,6 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = DjangoDash('FuelWeek', external_stylesheets=external_stylesheets)
 
 options=['Monthly','Weekly']
-Date=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31']
-month_no=['01','02','03','04','05','06','07','08','09','10','11','12']
-fuel_used_month=pd.read_csv('C:/Users/Rimsha khan/Desktop/insights/insights/fuelused_date.csv')
-month=['Jan','Feb','March','April',"May",'June','July','August','Sept','Oct','Nov','Dec']
 val2=[2,8,9,3,10,7,9,12,10,8,9,15]
 app.layout = html.Div([
     
@@ -44,14 +40,10 @@ def display_value(value,**kwargs):
     type_=session_val['car/truck'].lower()
  
     fuel_used_week=functions.fetch_insight(type_,dev,'Fuel_consumed_week')
+  
+    x= fuel_used_week['week_day']
+    y = fuel_used_week["FUEL_USED"]
     
-    if value=='Weekly':
-        
-        x= fuel_used_week['week_day']
-        y = fuel_used_week["FUEL_USED"]
-    else:
-        x=month
-        y=val2
     fig=go.Figure()
     fig.add_trace(go.Bar({'x' :x,
                         'y' : y,
