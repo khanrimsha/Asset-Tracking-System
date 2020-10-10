@@ -17,23 +17,23 @@
       <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Vehicles</span>
         <div class="count green">{{vehicle_count}}</div>
-        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+        
       </div>
      
       <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Cars</span>
         <div class="count">{{car_count}}</div>
-        <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>
+        
       </div>
       <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Trucks</span>
         <div class="count">{{truck_count}}</div>
-        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+        
       </div>
       <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Airplanes</span>
         <div class="count">{{plane_count}}</div>
-        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+       
       </div>
     </div>
     <!-- /top tiles -->
@@ -42,7 +42,7 @@
   <form  action=' {% url "vehicle_history" %}'method="POST">
     {%csrf_token %}
     
-        <label for="cars"><h3><i class="fa fa-car" style="font-size:24px;color:rgb(247, 192, 12);"> </i> Choose Vehicle:</label>
+        <label for="cars"><h3 style="color:white;"><i class="fa fa-car" style="font-size:24px;color:rgb(247, 192, 12);"> </i> Choose Vehicle:</label>
         
         <select  class="button" name="cars" id="cars" placeholder=" --Select--">
           <option value="" disabled selected hidden>--Select--</option>
@@ -65,13 +65,7 @@
               </div>
               
               <div class="col-md-2 col-sm-2 col-xs-2 pull-right " >
-               <!-- <form  action=' {% url "vehicle_history" %}' method="POST"></form>
-                <label for="car" style="margin-right: 0.5em;width: 12%;margin-left: 0em;border: 0px;" > <h3>Car</h3></label>
-                  <input type="radio" name="car/truck" id='car' value="car" onclick="location.href='{% url 'vehicle_history' %}';" style="margin-right: 0.5em;width: 8%; height: 15px;margin-left: 1em;border: 0px;">
-                  <label for="truck" style="margin-right: 0.5em;width: 12%;margin-left: 0em;border: 0px;"> <h3>Truck</h3></label>
-                
-                <input type="radio" name="car/truck" id='truck'value="truck" onclick="location.href='{% url 'vehicle_history' %}';" style="width: 8%; height: 15px;margin-right: 0.5em;margin-left: 2em;border: 0px;"> 
-              </form> --> <h3>
+                <h3>
               <form action='{% url 'vehicle_history' %}' method="GET" >
                 
    
@@ -94,14 +88,9 @@
 
           <div class="row x_title">
             <div class="col-md-12">
-              <h3>Vehicle History <small> Call ID:{{val}}</small></h3>
+              <h3 style="color:white">Vehicle History <small> Call ID:{{val}}</small></h3>
             </div>
-         <!--   <div class="col-md-6">
-              <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
-              </div>
-            </div>-->
+  
           </div>
 
           <div class="col-md-12 col-sm-12 col-xs-12">
@@ -114,52 +103,7 @@
            
         </div>
         
-<!--
-          <div class="col-md-3 col-sm-3 col-xs-12 bg-white">
-            <div class="x_title">
-              <h2>Top Campaign Performance</h2>
-              <div class="clearfix"></div>
-            </div>
 
-            <div class="col-md-12 col-sm-12 col-xs-6">
-              <div>
-                <p>Facebook Campaign</p>
-                <div class="">
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="99"></div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <p>Twitter Campaign</p>
-                <div class="">
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="60"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12 col-sm-12 col-xs-6">
-              <div>
-                <p>Conventional Media</p>
-                <div class="">
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="40"></div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <p>Bill boards</p>
-                <div class="">
-                  <div class="progress progress_sm" style="width: 76%;">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="50"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        -->
           <div class="clearfix"></div>
         </div>
         

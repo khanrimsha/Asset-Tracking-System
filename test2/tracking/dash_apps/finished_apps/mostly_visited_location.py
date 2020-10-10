@@ -157,7 +157,7 @@ def creategraph(dff):
                             marker_colors=pie_colors,textposition="inside",
                             textfont = {'family': "Times", 'size': 14, #'color': "white"
                             },
-           hovertemplate="<b>Location:</b> "+text+"<br>Frequency: "+'value+percent'+"<extra></extra>",
+           hovertemplate="<b>Location:</b> "+text+"<extra></extra>",
                   )])
     figure.update_layout(#title_text='<b>Mostly Visited Location</b>',
     autosize=False,
@@ -299,7 +299,7 @@ def click(clickData,**kwargs):
     for i in unique:
         i=pd.Series(geo_data[geo_data['cluster']==i].iloc[0])
         uni=uni.append(i)
-    uni['size']=100
+    uni['size']=200
     uni['marker']='marker'
     my=clickData['points'][0]['customdata']
     if my!= -1:
@@ -311,7 +311,7 @@ def click(clickData,**kwargs):
         dff['size']=10
         dff['marker']='marker'
         my_dff=uni
-        my_dff.loc[my_dff.cluster == my, 'size'] = 100
+        my_dff.loc[my_dff.cluster == my, 'size'] = 200
         for i in range(0,len(dff)):
             my_dff=my_dff.append(dff.iloc[i])#making new df    
         

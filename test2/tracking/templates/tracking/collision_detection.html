@@ -145,10 +145,10 @@ if (probab==0) {
 }else{
   marker.bindPopup('<div id="foo"></div>').on('popupopen', function (e) {
         Plotly.newPlot('foo', [{
-          values: probab,
+          values: probab,textposition:"inside",
   labels: device,
   type: 'pie'
-        }], {
+        }], {title: "<b> Comparative Chances</b>",
             autosize: false,
             width: 300,
             height: 150,
@@ -156,7 +156,7 @@ if (probab==0) {
                 l: 0,
                 r: 0,
                 b: 0,
-                t: 0,
+                t: 25,
                 pad: 0
             }
         });
@@ -226,7 +226,7 @@ for (var i =0;i<danger_data.length;i++)
 var co=[center,danger_data[i]];
 polyArray.push(co);
 }
-Line(polyArray,'red');
+Line(polyArray,'#91219E');
 }  else {
 var latlngs = [[lt, lng],center];//center point and hover point
 Line(latlngs,'#000099');
@@ -277,6 +277,7 @@ var tab_data = [{
 }]
 
 var layout = {
+  
   paper_bgcolor: "rgba(0,0,0,0)",
   height:'auto',
  color:'white',

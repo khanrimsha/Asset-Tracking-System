@@ -57,23 +57,23 @@
       <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Vehicles</span>
         <div class="count green">{{vehicle_count}}</div>
-        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+        
       </div>
      
       <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Cars</span>
         <div class="count">{{car_count}}</div>
-        <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>
+       
       </div>
       <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Trucks</span>
         <div class="count">{{truck_count}}</div>
-        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+        
       </div>
       <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Airplanes</span>
         <div class="count">{{plane_count}}</div>
-        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+        
       </div>
     </div>
     <!-- /top tiles -->
@@ -82,7 +82,7 @@
   <form  action=' {% url "insights" %}'method="POST">
     {%csrf_token %}
     
-        <label for="cars"><h3><i class="fa fa-car" style="font-size:24px;color:rgb(247, 192, 12);"> </i> Choose Vehicle:</label>
+        <label for="cars"><h3 style="color:white"><i class="fa fa-car" style="font-size:24px;color:rgb(247, 192, 12);"> </i> Choose Vehicle:</label>
         
         <select  class="button" name="cars" id="cars" placeholder=" --Select--">
           <option value="" disabled selected hidden>--Select--</option>
@@ -225,7 +225,7 @@
       border-color: rgb(224, 219, 219)">
         <div class="x_panel tile fixed_height_460" style="background-color:black;" >
           <div class="x_title">
-            <h2 style='color:white;'><i class="fa fa-clock-o" style="font-size:24px;color:rgb(12, 247, 110);"> </i> Peak Hour <small> {{val}}</small></h2>
+            <h2 style='color:white;'><i class="fa fa-clock-o" style="color:white ;font-size:24px;color:rgb(12, 247, 110);"> </i> Peak Hour <small> {{val}}</small></h2>
             
             <div class="clearfix"></div>
           </div>

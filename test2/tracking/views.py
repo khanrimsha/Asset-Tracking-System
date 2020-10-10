@@ -129,20 +129,7 @@ def veh_hist(requests):
 def insights(request):
     if request.session.has_key('username') and request.session.has_key('pass'):
         if request.session['username']==username1 and request.session['pass']==password1 :
-           
-            geo_data=pd.read_csv('C:/Users/Rimsha khan/Desktop/Extra/test/Power BI/truck_structured_data.csv')
 
-            geo_data=geo_data.dropna(subset=['LATITUDE','LONGITUDE'])
-            my_data=geo_data[geo_data['DATE']=='2020-06-07']
-            listt=my_data.loc[:,['LATITUDE','LONGITUDE']].values.tolist()
-            last_co_ords=my_data.loc[:,['LATITUDE','LONGITUDE']].tail(1).values.tolist()
-            m2=folium.Map(height=300,location=listt[0],zoom_start=6,tiles='cartodbpositron',attr='by Rimsha Khan')
-
-            folium.vector_layers.PolyLine(listt,popup='<b>Path of Vehicle</b>',tooltip='Track of 2020-06-07',color='blue',weight=3).add_to(m2)
-
-            folium.Marker(location=listt[0],popup='Starting Point',tooltip='<strong>Starting Point</strong>',icon=folium.Icon(color='red',prefix='fa',icon='anchor')).add_to(m2)
-            folium.Marker(location=last_co_ords[0],popup='Finish Point',tooltip='<strong>Finish Point</strong>',icon=folium.Icon(color='purple',prefix='fa',icon='anchor')).add_to(m2)
-            m2=m2._repr_html_()
             results='No Select'
             try:
                 
@@ -230,7 +217,7 @@ def insights(request):
 
  
             results=request.session['django_plotly_dash']['dev']
-            context = {'indicator':indicator,'lines':lines,'rank1':rank1,'rank2':rank2,'rank3':rank3,'tip_marker':tip_marker,'mymap': m2,'drop':drop,'val':results,'car_count':car_count,'truck_count':truck_count,'plane_count':plane_count,'vehicle_count':vehicle_count,'display':display}
+            context = {'indicator':indicator,'lines':lines,'rank1':rank1,'rank2':rank2,'rank3':rank3,'tip_marker':tip_marker,'drop':drop,'val':results,'car_count':car_count,'truck_count':truck_count,'plane_count':plane_count,'vehicle_count':vehicle_count,'display':display}
             
             return render(request,'tracking/insights.html',context)
         else:
