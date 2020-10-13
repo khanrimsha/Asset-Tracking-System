@@ -11,12 +11,12 @@ from datetime import datetime, timedelta
 import re
 import folium
 
-map_data=pd.read_csv('C:/Users/Rimsha khan/Desktop/Extra/test/Power BI/truck_structured_data.csv')
+#map_data=pd.read_csv('C:/Users/Rimsha khan/Desktop/Extra/test/Power BI/truck_structured_data.csv')
 
-map_data=map_data.dropna(subset=['LATITUDE','LONGITUDE'])
-map_data=map_data[map_data['DATE']=='2020-06-07']
-Lat=map_data["LATITUDE"].values.tolist()
-Long=map_data["LONGITUDE"].values.tolist()
+#map_data=map_data.dropna(subset=['LATITUDE','LONGITUDE'])
+#map_data=map_data[map_data['DATE']=='2020-06-07']
+#Lat=map_data["LATITUDE"].values.tolist()
+#Long=map_data["LONGITUDE"].values.tolist()
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
